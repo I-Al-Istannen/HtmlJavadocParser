@@ -1,6 +1,6 @@
 package de.ialistannen.htmljavadocparser.exception;
 
-public class ResolveException extends Exception {
+public class ResolveException extends RuntimeException {
 
   public ResolveException(String message) {
     super(message);

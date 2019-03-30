@@ -2,6 +2,8 @@ package de.ialistannen.htmljavadocparser.parsing;
 
 import de.ialistannen.htmljavadocparser.model.properties.Deprecatable.DeprecationStatus;
 import de.ialistannen.htmljavadocparser.model.properties.HasVisibility.VisibilityLevel;
+import de.ialistannen.htmljavadocparser.resolving.DocumentResolver;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -11,10 +13,16 @@ import org.jsoup.select.Elements;
 
 public class JTypeParser {
 
-  private Document document;
+  private String url;
+  private final DocumentResolver resolver;
 
-  public JTypeParser(Document document) {
-    this.document = document;
+  public JTypeParser(String url, DocumentResolver resolver) {
+    this.url = url;
+    this.resolver = resolver;
+  }
+
+  private Document document() {
+    return resolver.resolve(url);
   }
 
   /**
@@ -23,10 +31,14 @@ public class JTypeParser {
    * @return the parsed declaration
    */
   public String parseDeclaration() {
-    Element typeNameLabel = document.getElementsByClass("typeNameLabel").first();
-    Element typeDescriptionPre = typeNameLabel.parent();
+    Element typeDescriptionPre = getTypeDeclarationPre();
 
     return typeDescriptionPre.text().replaceAll("\\n", " ");
+  }
+
+  private Element getTypeDeclarationPre() {
+    Element typeNameLabel = document().getElementsByClass("typeNameLabel").first();
+    return typeNameLabel.parent();
   }
 
   /**
@@ -35,19 +47,19 @@ public class JTypeParser {
    * @return the superclass name
    */
   public Optional<String> parseSuperClass() {
-    Element list = document.getElementsByClass("inheritance").first().child(0);
+    Element list = document().getElementsByClass("inheritance").first().child(0);
     Element relevantChild = list.child(list.children().size() - 1);
     return Optional.of(relevantChild.text());
   }
 
   public String parsePackage() {
-    return document.getElementsByClass("packageLabelInType").first()
+    return document().getElementsByClass("packageLabelInType").first()
         .nextElementSibling()
         .text();
   }
 
   public String parseSimpleName() {
-    return document.selectFirst(".title").text().split(" ")[1];
+    return document().selectFirst(".title").text().split(" ")[1];
   }
 
   /**
@@ -56,7 +68,7 @@ public class JTypeParser {
    * @return the superinterfaces
    */
   public List<String> parseSuperInterfaces() {
-    Element path = document.selectFirst(".description > ul > li > dl > dd");
+    Element path = document().selectFirst(".description > ul > li > dl > dd");
 
     return path.children().stream()
         .map(code -> linkToFqn(code.child(0).attr("href")))
@@ -64,7 +76,7 @@ public class JTypeParser {
   }
 
   public DeprecationStatus parseDeprecationStatus() {
-    return document.select(".description .deprecationBlock > span").isEmpty()
+    return document().select(".description .deprecationBlock > span").isEmpty()
         ? DeprecationStatus.NOT_DEPRECATED
         : DeprecationStatus.DEPRECATED;
   }
@@ -78,11 +90,19 @@ public class JTypeParser {
     }
   }
 
+  public List<String> parseAnnotations() {
+    return getTypeDeclarationPre().getElementsByTag("a").stream()
+        .filter(element -> element.attr("title").contains("annotation in"))
+        .map(element -> linkToFqn(element.attr("href")))
+        .collect(Collectors.toList());
+  }
+
   public List<String> parseMethods() {
-    Elements rows = document.getElementById("method.summary").parent().getElementsByTag("tr");
+    Elements rows = document().getElementById("method.summary").parent().getElementsByTag("tr");
     for (Element row : rows) {
 
     }
+    return Collections.emptyList();
   }
 
   private String linkToFqn(String link) {

@@ -20,11 +20,8 @@ public interface Nameable extends HasVisibility {
    * Returns the fully qualified name.
    *
    * @return the fully qualified name
-   * @implNote The default implementation just appends the simple name to the package name
    */
-  default String getFullyQualifiedName() {
-    return getPackage().getFullyQualifiedName() + "." + getSimpleName();
-  }
+  String getFullyQualifiedName();
 
   /**
    * Returns the package.

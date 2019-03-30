@@ -15,5 +15,5 @@ public interface DocumentResolver {
    * @return the document
    * @throws ResolveException if an error occurred
    */
-  Document resolve(String url) throws ResolveException;
+  Document resolve(String url);
 }

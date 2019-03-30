@@ -18,5 +18,5 @@ public interface Resolver<T, R> {
    * @return the resolved type
    * @throws ResolveException if an error occurred
    */
-  Optional<R> resolve(T input) throws ResolveException;
+  Optional<R> resolve(T input);
 }

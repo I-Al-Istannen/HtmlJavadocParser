@@ -17,7 +17,7 @@ public class LocalFileResolver implements DocumentResolver {
   }
 
   @Override
-  public Document resolve(String url) throws ResolveException {
+  public Document resolve(String url) {
     try {
       return Jsoup.parse(
           getClass().getResourceAsStream(resolvePath(url)),
@@ -30,6 +30,6 @@ public class LocalFileResolver implements DocumentResolver {
   }
 
   private String resolvePath(String input) {
-    return basePath + "/" + input;
+    return basePath + "/" + input.replace(baseUrl, "");
   }
 }

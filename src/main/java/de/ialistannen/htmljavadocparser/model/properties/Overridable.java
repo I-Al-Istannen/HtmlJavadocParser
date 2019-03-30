@@ -10,7 +10,7 @@ public interface Overridable {
    *
    * @return the control modifier
    */
-  ControlModifier getOvverideControlModifier();
+  ControlModifier getOverrideControlModifier();
 
   /**
    * The different modifiers that control whether the object can be override.

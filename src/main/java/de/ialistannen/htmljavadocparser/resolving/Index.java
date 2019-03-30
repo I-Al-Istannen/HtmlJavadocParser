@@ -3,12 +3,13 @@ package de.ialistannen.htmljavadocparser.resolving;
 
 import static java.util.stream.Collectors.toList;
 
+import de.ialistannen.htmljavadocparser.model.JavadocPackage;
 import de.ialistannen.htmljavadocparser.model.types.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 /**
@@ -16,17 +17,37 @@ import java.util.function.Predicate;
  */
 public class Index {
 
-  private final BiFunction<Index, String, Optional<Type>> loader;
   private Map<String, Type> types;
+  private Map<String, JavadocPackage> packages;
 
   /**
    * Creates a new index.
-   *
-   * @param loader the loader function
    */
-  public Index(BiFunction<Index, String, Optional<Type>> loader) {
-    this.loader = loader;
+  public Index() {
     this.types = new HashMap<>();
+    this.packages = new HashMap<>();
+  }
+
+  /**
+   * Adds the given types.
+   *
+   * @param types the types
+   */
+  public void addTypes(Iterable<? extends Type> types) {
+    for (Type type : types) {
+      this.types.put(type.getFullyQualifiedName(), type);
+    }
+  }
+
+  /**
+   * Adds the given packages.
+   *
+   * @param packages the package
+   */
+  public void addPackages(Iterable<? extends JavadocPackage> packages) {
+    for (JavadocPackage javadocPackage : packages) {
+      this.packages.put(javadocPackage.getFullyQualifiedName(), javadocPackage);
+    }
   }
 
   /**
@@ -36,18 +57,7 @@ public class Index {
    * @return the found type
    */
   public Optional<Type> getTypeForFullName(String fullyQualifiedName) {
-    if (types.containsKey(fullyQualifiedName)) {
-      return Optional.of(types.get(fullyQualifiedName));
-    }
-    Optional<Type> loaded = loader.apply(this, fullyQualifiedName);
-
-    if (loaded.isEmpty()) {
-      return Optional.empty();
-    }
-
-    types.put(loaded.get().getFullyQualifiedName(), loaded.get());
-
-    return loaded;
+    return Optional.ofNullable(this.types.get(fullyQualifiedName));
   }
 
   /**
@@ -58,7 +68,9 @@ public class Index {
    * @throws java.util.NoSuchElementException if the class was not found
    */
   public Type getTypeForFullNameOrError(String fullyQualifiedName) {
-    return getTypeForFullName(fullyQualifiedName).orElseThrow();
+    return getTypeForFullName(fullyQualifiedName).orElseThrow(
+        () -> new NoSuchElementException("Could not find type " + fullyQualifiedName)
+    );
   }
 
   /**
@@ -81,5 +93,27 @@ public class Index {
    */
   public List<Type> findWithName(String name) {
     return findMatching(type -> type.getSimpleName().equals(name));
+  }
+
+  /**
+   * Returns the package with the given name.
+   *
+   * @param name the name of the package
+   * @return the package
+   */
+  public Optional<JavadocPackage> getPackage(String name) {
+    return Optional.ofNullable(packages.get(name));
+  }
+
+  /**
+   * Returns the package with the given name.
+   *
+   * @param name the name of the package
+   * @return the package
+   */
+  public JavadocPackage getPackageOrError(String name) {
+    return getPackage(name).orElseThrow(
+        () -> new NoSuchElementException("Could not find package " + name)
+    );
   }
 }
