@@ -22,7 +22,7 @@ import org.jsoup.select.NodeVisitor;
 
 public class JTypeParser {
 
-  private String url;
+  private final String url;
   private final DocumentResolver resolver;
 
   public JTypeParser(String url, DocumentResolver resolver) {
@@ -30,8 +30,12 @@ public class JTypeParser {
     this.resolver = resolver;
   }
 
-  private Document document() {
+  protected Document document() {
     return resolver.resolve(url);
+  }
+
+  protected DocumentResolver resolver() {
+    return resolver;
   }
 
   /**
@@ -125,8 +129,8 @@ public class JTypeParser {
     return methods;
   }
 
-  private Invocable invocableFromLink(Element link, Index index) {
-    JInvocableParser parser = new JInvocableParser(link.absUrl("href"), resolver);
+  protected Invocable invocableFromLink(Element link, Index index) {
+    JInvocableParser parser = new JInvocableParser(link.absUrl("href"), resolver());
     String decodedLink = URLDecoder.decode(link.attr("href"), StandardCharsets.UTF_8);
     String fullyQualifiedName = linkToFqn(decodedLink);
     return new JInvocable(fullyQualifiedName, index, parser);

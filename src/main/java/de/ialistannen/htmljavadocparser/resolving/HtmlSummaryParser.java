@@ -1,10 +1,12 @@
 package de.ialistannen.htmljavadocparser.resolving;
 
 import de.ialistannen.htmljavadocparser.impl.JAnnotation;
+import de.ialistannen.htmljavadocparser.impl.JClass;
 import de.ialistannen.htmljavadocparser.impl.JPackage;
 import de.ialistannen.htmljavadocparser.impl.JType;
 import de.ialistannen.htmljavadocparser.model.JavadocPackage;
 import de.ialistannen.htmljavadocparser.model.types.Type;
+import de.ialistannen.htmljavadocparser.parsing.JClassParser;
 import de.ialistannen.htmljavadocparser.parsing.JTypeParser;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,6 +53,13 @@ public class HtmlSummaryParser {
         typeCache.add(new JAnnotation(
             extractFqn(document, url), new JTypeParser(url, documentResolver), index
         ));
+      } else if (a.attr("title").contains("class in")) {
+        JClass jClass = new JClass(
+            extractFqn(document, url),
+            index,
+            new JClassParser(url, documentResolver)
+        );
+        typeCache.add(jClass);
       } else {
         JType type = new JType(
             extractFqn(document, url),

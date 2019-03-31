@@ -15,7 +15,17 @@ public final class LinkUtils {
   public static String linkToFqn(String link) {
     return link.replaceAll("(\\.\\./)+", "")
         .replace(".html", "")
-        .replace("/", ".");
+        .replace("/", ".")
+        .replace("<init>", ""); // constructors
   }
 
+  /**
+   * Returns the url fragment.
+   *
+   * @param url the url
+   * @return the url fragment
+   */
+  public static String urlFragment(String url) {
+    return url.substring(url.lastIndexOf('#') + 1);
+  }
 }

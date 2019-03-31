@@ -6,4 +6,10 @@ import de.ialistannen.htmljavadocparser.model.properties.Ownable;
 
 public interface JavadocField extends Nameable, Overridable, Ownable {
 
+  /**
+   * Returns the field declaration.
+   *
+   * @return the field declaration
+   */
+  String getDeclaration();
 }

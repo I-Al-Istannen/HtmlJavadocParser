@@ -8,6 +8,7 @@ import de.ialistannen.htmljavadocparser.model.types.Type;
 import de.ialistannen.htmljavadocparser.parsing.JInvocableParser;
 import de.ialistannen.htmljavadocparser.resolving.Index;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -83,7 +84,7 @@ public class JInvocable implements Invocable {
   }
 
   @Override
-  public ControlModifier getOverrideControlModifier() {
+  public Collection<ControlModifier> getOverrideControlModifier() {
     return parser.parseOverrideModifier();
   }
 

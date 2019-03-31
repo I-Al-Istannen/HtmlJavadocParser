@@ -2,10 +2,12 @@ package de.ialistannen.htmljavadocparser.impl;
 
 import static java.util.stream.Collectors.toList;
 
+import de.ialistannen.htmljavadocparser.model.JavadocField;
 import de.ialistannen.htmljavadocparser.model.JavadocPackage;
 import de.ialistannen.htmljavadocparser.model.doc.JavadocComment;
 import de.ialistannen.htmljavadocparser.model.properties.Invocable;
 import de.ialistannen.htmljavadocparser.model.types.JavadocAnnotation;
+import de.ialistannen.htmljavadocparser.model.types.JavadocClass;
 import de.ialistannen.htmljavadocparser.model.types.Type;
 import de.ialistannen.htmljavadocparser.parsing.JTypeParser;
 import de.ialistannen.htmljavadocparser.resolving.DocumentResolver;
@@ -22,7 +24,7 @@ import java.util.Optional;
 public class JType implements Type {
 
   private final String fullyQualifiedName;
-  private final Index index;
+  protected final Index index;
   private JTypeParser jTypeParser;
   private Memoized<String> declaration;
   private Memoized<Optional<Type>> superclass;
@@ -152,6 +154,18 @@ public class JType implements Type {
     System.out.println("Annotations       : " + type.getAnnotations());
     System.out.println("Methods           : " + type.getMethods());
 
+    JavadocClass javadocClass = (JavadocClass) type;
+    System.out.println("Fields:           : " + javadocClass.getFields());
+    System.out.println("Constructors:     : " + javadocClass.getConstructors());
+    System.out.println("Generic types:    : " + javadocClass.getGenericTypes());
+    System.out.println("Override modifier : " + javadocClass.getOverrideControlModifier());
+
+    System.out.println();
+    printInvocableInfo(javadocClass.getConstructors().get(2));
+
+    System.out.println();
+    printFieldInfo(javadocClass.getFields().get(0));
+
     System.out.println();
     System.out.println();
     Invocable method = type.getMethods().stream()
@@ -159,6 +173,10 @@ public class JType implements Type {
         .filter(invocable -> invocable.getParameters().size() == 1)
         .findFirst()
         .orElseThrow();
+    printInvocableInfo(method);
+  }
+
+  private static void printInvocableInfo(Invocable method) {
     System.out.println("Declaration       : " + method.getDeclaration());
     System.out.println("Simple name       : " + method.getSimpleName());
     System.out.println("Fully qualified   : " + method.getFullyQualifiedName());
@@ -172,5 +190,16 @@ public class JType implements Type {
     System.out.println("Override modifier : " + method.getOverrideControlModifier());
     System.out.println("Annotations       : " + method.getAnnotations());
     System.out.println("Thrown exceptions : " + method.getThrows());
+  }
+
+  private static void printFieldInfo(JavadocField field) {
+    System.out.println("Declaration       : " + field.getDeclaration());
+    System.out.println("Simple name       : " + field.getSimpleName());
+    System.out.println("Fully qualified   : " + field.getFullyQualifiedName());
+    System.out.println("Visibility        : " + field.getVisibility());
+    System.out.println("Package           : " + field.getPackage());
+    System.out.println("Declared owner    : " + field.getDeclaredOwner());
+    System.out.println("Original owner    : " + field.getOriginalOwner());
+    System.out.println("Override modifier : " + field.getOverrideControlModifier());
   }
 }

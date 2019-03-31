@@ -1,6 +1,7 @@
 package de.ialistannen.htmljavadocparser.parsing;
 
 import static de.ialistannen.htmljavadocparser.util.LinkUtils.linkToFqn;
+import static de.ialistannen.htmljavadocparser.util.LinkUtils.urlFragment;
 
 import de.ialistannen.htmljavadocparser.model.properties.Deprecatable.DeprecationStatus;
 import de.ialistannen.htmljavadocparser.model.properties.HasVisibility.VisibilityLevel;
@@ -10,6 +11,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,17 +35,13 @@ public class JInvocableParser {
   private Element element() {
     Document document = resolver.resolve(url);
 
-    return document.getElementById(URLDecoder.decode(urlFragment(), StandardCharsets.UTF_8))
+    return document.getElementById(URLDecoder.decode(urlFragment(url), StandardCharsets.UTF_8))
         .nextElementSibling();
-  }
-
-  private String urlFragment() {
-    return url.substring(url.lastIndexOf('#') + 1);
   }
 
   private Element summaryLink() {
     Document document = resolver.resolve(url);
-    Element href = document.getElementsByAttributeValueEnding("href", "#" + urlFragment())
+    Element href = document.getElementsByAttributeValueEnding("href", "#" + urlFragment(url))
         .first();
     return href;
   }
@@ -70,6 +68,11 @@ public class JInvocableParser {
     Element row = summaryLink();
     while (!row.tagName().equals("tr")) {
       row = row.parent();
+    }
+
+    // constructor
+    if (!row.getElementsByClass("colConstructorName").isEmpty()) {
+      return parseActualOwner();
     }
 
     Element returnTypeTd = row.getElementsByClass("colFirst").first();
@@ -142,14 +145,15 @@ public class JInvocableParser {
     return null;
   }
 
-  public ControlModifier parseOverrideModifier() {
+  public Collection<ControlModifier> parseOverrideModifier() {
+    Collection<ControlModifier> modifiers = EnumSet.noneOf(ControlModifier.class);
     String declaration = parseDeclaration();
     for (ControlModifier modifier : ControlModifier.values()) {
       if (declaration.contains(modifier.getName())) {
-        return modifier;
+        modifiers.add(modifier);
       }
     }
-    return ControlModifier.NONE;
+    return modifiers;
   }
 
   public List<String> parseAnnotations() {

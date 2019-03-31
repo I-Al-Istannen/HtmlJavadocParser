@@ -1,5 +1,7 @@
 package de.ialistannen.htmljavadocparser.model.properties;
 
+import java.util.Collection;
+
 /**
  * An object that can be overridden.
  */
@@ -10,13 +12,12 @@ public interface Overridable {
    *
    * @return the control modifier
    */
-  ControlModifier getOverrideControlModifier();
+  Collection<ControlModifier> getOverrideControlModifier();
 
   /**
    * The different modifiers that control whether the object can be override.
    */
   enum ControlModifier {
-    NONE("N/A"),
     FINAL("final"),
     ABSTRACT("abstract");
 
