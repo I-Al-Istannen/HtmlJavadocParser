@@ -16,6 +16,9 @@ import de.ialistannen.htmljavadocparser.util.Memoized;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * A base javadoc {@link Type}.
+ */
 public class JType implements Type {
 
   private final String fullyQualifiedName;
@@ -60,7 +63,7 @@ public class JType implements Type {
 
   @Override
   public List<Invocable> getMethods() {
-    return null;
+    return jTypeParser.parseMethods(index);
   }
 
   @Override
@@ -124,24 +127,50 @@ public class JType implements Type {
     return "JType{" + getFullyQualifiedName() + '}';
   }
 
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] args) {
+    String baseUrl = "https://docs.oracle.com/javase/10/docs/api/";
     DocumentResolver documentResolver = new LocalFileResolver(
-        "https://docs.oracle.com/javase/10/docs/api/", "/testfiles"
+        baseUrl, "/testfiles"
     );
     Index index = new Index();
 
-    HtmlSummaryParser summaryParser = new HtmlSummaryParser(documentResolver, index);
+    HtmlSummaryParser summaryParser = new HtmlSummaryParser(documentResolver, baseUrl, index);
     index.addTypes(summaryParser.getTypes());
     index.addPackages(summaryParser.getPackages());
 
     Type type = index.getTypeForFullNameOrError("java.lang.String");
-    System.out.println(type.getDeclaration());
-    System.out.println(type.getSuperClass());
-    System.out.println(type.getSuperInterfaces());
-    System.out.println(type.getDeprecationStatus());
-    System.out.println(type.getVisibility());
-    System.out.println(type.getPackage());
-    System.out.println(type.getDeclaredOwner());
-    System.out.println(type.getAnnotations());
+    System.out.println("Declaration       : " + type.getDeclaration());
+    System.out.println("Simple name       : " + type.getSimpleName());
+    System.out.println("Fully qualified   : " + type.getFullyQualifiedName());
+    System.out.println("Super class       : " + type.getSuperClass());
+    System.out.println("Super interfaces  : " + type.getSuperInterfaces());
+    System.out.println("Visibility        : " + type.getVisibility());
+    System.out.println("Deprecation       : " + type.getDeprecationStatus());
+    System.out.println("Package           : " + type.getPackage());
+    System.out.println("Declared owner    : " + type.getDeclaredOwner());
+    System.out.println("Original owner    : " + type.getOriginalOwner());
+    System.out.println("Annotations       : " + type.getAnnotations());
+    System.out.println("Methods           : " + type.getMethods());
+
+    System.out.println();
+    System.out.println();
+    Invocable method = type.getMethods().stream()
+        .filter(invocable -> invocable.getSimpleName().equals("getBytes"))
+        .filter(invocable -> invocable.getParameters().size() == 1)
+        .findFirst()
+        .orElseThrow();
+    System.out.println("Declaration       : " + method.getDeclaration());
+    System.out.println("Simple name       : " + method.getSimpleName());
+    System.out.println("Fully qualified   : " + method.getFullyQualifiedName());
+    System.out.println("Visibility        : " + method.getVisibility());
+    System.out.println("Return type       : " + method.getReturnType());
+    System.out.println("Parameters        : " + method.getParameters());
+    System.out.println("Deprecation       : " + method.getDeprecationStatus());
+    System.out.println("Package           : " + method.getPackage());
+    System.out.println("Declared owner    : " + method.getDeclaredOwner());
+    System.out.println("Original owner    : " + method.getOriginalOwner());
+    System.out.println("Override modifier : " + method.getOverrideControlModifier());
+    System.out.println("Annotations       : " + method.getAnnotations());
+    System.out.println("Thrown exceptions : " + method.getThrows());
   }
 }

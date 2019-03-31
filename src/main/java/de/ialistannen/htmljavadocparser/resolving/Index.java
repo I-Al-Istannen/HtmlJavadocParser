@@ -4,7 +4,9 @@ package de.ialistannen.htmljavadocparser.resolving;
 import static java.util.stream.Collectors.toList;
 
 import de.ialistannen.htmljavadocparser.model.JavadocPackage;
+import de.ialistannen.htmljavadocparser.model.types.PrimitiveType;
 import de.ialistannen.htmljavadocparser.model.types.Type;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +28,8 @@ public class Index {
   public Index() {
     this.types = new HashMap<>();
     this.packages = new HashMap<>();
+
+    addTypes(Arrays.asList(PrimitiveType.values()));
   }
 
   /**
@@ -57,7 +61,8 @@ public class Index {
    * @return the found type
    */
   public Optional<Type> getTypeForFullName(String fullyQualifiedName) {
-    return Optional.ofNullable(this.types.get(fullyQualifiedName));
+    String arrayRemoved = fullyQualifiedName.replace("...", "").replace("[]", "");
+    return Optional.ofNullable(this.types.get(arrayRemoved));
   }
 
   /**

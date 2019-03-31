@@ -19,6 +19,7 @@ import org.jsoup.nodes.Element;
 public class HtmlSummaryParser {
 
   private final DocumentResolver documentResolver;
+  private final String baseUrl;
   private final Index index;
   private Collection<Type> typeCache;
   private Collection<JavadocPackage> packageCache;
@@ -27,14 +28,17 @@ public class HtmlSummaryParser {
    * Creates a new HTML resolver.
    *
    * @param documentResolver the document resolver to use
+   * @param baseUrl the base url
+   * @param index the index
    */
-  public HtmlSummaryParser(DocumentResolver documentResolver, Index index) {
+  public HtmlSummaryParser(DocumentResolver documentResolver, String baseUrl, Index index) {
     this.documentResolver = documentResolver;
+    this.baseUrl = baseUrl;
     this.index = index;
   }
 
   private void index() {
-    Document document = documentResolver.resolve("allclasses-noframe.html");
+    Document document = documentResolver.resolve(baseUrl + "/allclasses-noframe.html");
     Element main = document.getElementsByAttributeValue("role", "main").first();
 
     typeCache = new ArrayList<>();

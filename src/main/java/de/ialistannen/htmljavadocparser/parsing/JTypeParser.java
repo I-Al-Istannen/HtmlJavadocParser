@@ -1,15 +1,24 @@
 package de.ialistannen.htmljavadocparser.parsing;
 
+import static de.ialistannen.htmljavadocparser.util.LinkUtils.linkToFqn;
+
+import de.ialistannen.htmljavadocparser.impl.JInvocable;
 import de.ialistannen.htmljavadocparser.model.properties.Deprecatable.DeprecationStatus;
 import de.ialistannen.htmljavadocparser.model.properties.HasVisibility.VisibilityLevel;
+import de.ialistannen.htmljavadocparser.model.properties.Invocable;
 import de.ialistannen.htmljavadocparser.resolving.DocumentResolver;
-import java.util.Collections;
+import de.ialistannen.htmljavadocparser.resolving.Index;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
+import org.jsoup.select.NodeVisitor;
 
 public class JTypeParser {
 
@@ -97,17 +106,55 @@ public class JTypeParser {
         .collect(Collectors.toList());
   }
 
-  public List<String> parseMethods() {
+  public List<Invocable> parseMethods(Index index) {
+    List<Invocable> methods = new ArrayList<>();
+
     Elements rows = document().getElementById("method.summary").parent().getElementsByTag("tr");
     for (Element row : rows) {
+      Element link = row.getElementsByClass("colSecond").first()
+          .getElementsByTag("a").first();
 
+      if (link == null) {
+        continue;
+      }
+
+      methods.add(invocableFromLink(link, index));
     }
-    return Collections.emptyList();
+
+    methods.addAll(getInheritedMethods(index));
+    return methods;
   }
 
-  private String linkToFqn(String link) {
-    return link.replaceAll("(\\.\\./)+", "")
-        .replace(".html", "")
-        .replace("/", ".");
+  private Invocable invocableFromLink(Element link, Index index) {
+    JInvocableParser parser = new JInvocableParser(link.absUrl("href"), resolver);
+    String decodedLink = URLDecoder.decode(link.attr("href"), StandardCharsets.UTF_8);
+    String fullyQualifiedName = linkToFqn(decodedLink);
+    return new JInvocable(fullyQualifiedName, index, parser);
+  }
+
+  private List<Invocable> getInheritedMethods(Index index) {
+    List<Invocable> methods = new ArrayList<>();
+    document().traverse(new NodeVisitor() {
+      @Override
+      public void head(Node node, int depth) {
+        if (!node.attr("id").startsWith("methods.inherited.from") || !(node instanceof Element)) {
+          return;
+        }
+
+        Element parent = (Element) node.parent();
+        for (Element link : parent.getElementsByTag("a")) {
+          if (!link.attr("href").contains("#")) {
+            continue;
+          }
+          methods.add(invocableFromLink(link, index));
+        }
+      }
+
+      @Override
+      public void tail(Node node, int depth) {
+      }
+    });
+
+    return methods;
   }
 }

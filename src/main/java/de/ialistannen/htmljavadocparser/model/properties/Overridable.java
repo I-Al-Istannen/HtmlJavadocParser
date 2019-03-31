@@ -16,7 +16,18 @@ public interface Overridable {
    * The different modifiers that control whether the object can be override.
    */
   enum ControlModifier {
-    FINAL,
-    ABSTRACT
+    NONE("N/A"),
+    FINAL("final"),
+    ABSTRACT("abstract");
+
+    private String name;
+
+    ControlModifier(String name) {
+      this.name = name;
+    }
+
+    public String getName() {
+      return name;
+    }
   }
 }
