@@ -171,6 +171,16 @@ public class JType implements Type {
     printEnumInfo((JavadocEnum) index
         .getTypeForFullNameOrError("java.nio.file.StandardCopyOption")
     );
+
+    System.out.println();
+    System.out.println("----");
+    JAnnotation annotation = (JAnnotation) index
+        .getTypeForFullNameOrError("java.lang.annotation.Target");
+    printTypeInfo(annotation);
+    for (Invocable invocable : annotation.getMethods()) {
+      System.out.println();
+      printInvocableInfo(invocable);
+    }
   }
 
   private static void printClassInfo(JavadocClass javadocClass) {

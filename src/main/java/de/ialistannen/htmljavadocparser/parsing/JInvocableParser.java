@@ -33,15 +33,23 @@ public class JInvocableParser {
     this.resolver = resolver;
   }
 
+  protected String url() {
+    return url;
+  }
+
+  protected DocumentResolver resolver() {
+    return resolver;
+  }
+
   private Element element() {
-    Document document = resolver.resolve(url);
+    Document document = resolver().resolve(url);
 
     return document.getElementById(URLDecoder.decode(urlFragment(url), StandardCharsets.UTF_8))
         .nextElementSibling();
   }
 
   private Element summaryLink() {
-    Document document = resolver.resolve(url);
+    Document document = resolver().resolve(url);
     return document.getElementsByAttributeValueEnding("href", "#" + urlFragment(url))
         .first();
   }
@@ -117,11 +125,11 @@ public class JInvocableParser {
   }
 
   public String parsePackage() {
-    return new JTypeParser(url, resolver).parsePackage();
+    return new JTypeParser(url, resolver()).parsePackage();
   }
 
   public String parseActualOwner() {
-    return parsePackage() + "." + new JTypeParser(url, resolver).parseSimpleName();
+    return parsePackage() + "." + new JTypeParser(url, resolver()).parseSimpleName();
   }
 
   public String parseOriginalOwner() {

@@ -12,6 +12,7 @@ import de.ialistannen.htmljavadocparser.util.StringUtils;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,7 +51,7 @@ public class JTypeParser {
     return StringUtils.normalizeWhitespace(typeDescriptionPre.text());
   }
 
-  private Element getTypeDeclarationPre() {
+  protected Element getTypeDeclarationPre() {
     Element typeNameLabel = document().getElementsByClass("typeNameLabel").first();
     return typeNameLabel.parent();
   }
@@ -61,7 +62,14 @@ public class JTypeParser {
    * @return the superclass name
    */
   public Optional<String> parseSuperClass() {
-    Element list = document().getElementsByClass("inheritance").first().child(0);
+    Element list = document().getElementsByClass("inheritance").first();
+
+    if (list == null) {
+      return Optional.empty();
+    }
+
+    list = list.child(0);
+
     Element relevantChild = list.child(list.children().size() - 1);
     return Optional.of(relevantChild.text());
   }
@@ -73,8 +81,7 @@ public class JTypeParser {
   }
 
   public String parseSimpleName() {
-    return StringUtils.normalizeWhitespace(document().selectFirst(".title").text())
-        .split(" ")[1]
+    return StringUtils.normalizeWhitespace(document().selectFirst(".typeNameLabel").text())
         .replaceAll("<.+", "");
   }
 
@@ -113,7 +120,13 @@ public class JTypeParser {
   public List<Invocable> parseMethods(Index index) {
     List<Invocable> methods = new ArrayList<>();
 
-    Elements rows = document().getElementById("method.summary").parent().getElementsByTag("tr");
+    Element methodSummary = document().getElementById("method.summary");
+
+    if (methodSummary == null) {
+      return Collections.emptyList();
+    }
+
+    Elements rows = methodSummary.parent().getElementsByTag("tr");
     for (Element row : rows) {
       Element link = row.getElementsByClass("colSecond").first()
           .getElementsByTag("a").first();

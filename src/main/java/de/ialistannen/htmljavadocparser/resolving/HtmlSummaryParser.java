@@ -8,6 +8,7 @@ import de.ialistannen.htmljavadocparser.impl.JPackage;
 import de.ialistannen.htmljavadocparser.impl.JType;
 import de.ialistannen.htmljavadocparser.model.JavadocPackage;
 import de.ialistannen.htmljavadocparser.model.types.Type;
+import de.ialistannen.htmljavadocparser.parsing.JAnnotationParser;
 import de.ialistannen.htmljavadocparser.parsing.JClassParser;
 import de.ialistannen.htmljavadocparser.parsing.JEnumParser;
 import de.ialistannen.htmljavadocparser.parsing.JTypeParser;
@@ -54,7 +55,7 @@ public class HtmlSummaryParser {
 
       if (a.attr("title").contains("annotation in")) {
         typeCache.add(new JAnnotation(
-            extractFqn(document, url), new JTypeParser(url, documentResolver), index
+            extractFqn(document, url), new JAnnotationParser(url, documentResolver), index
         ));
       } else if (a.attr("title").contains("class in")) {
         JClass jClass = new JClass(

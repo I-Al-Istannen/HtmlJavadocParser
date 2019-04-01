@@ -4,26 +4,26 @@ import de.ialistannen.htmljavadocparser.model.JavadocPackage;
 import de.ialistannen.htmljavadocparser.model.doc.JavadocComment;
 import de.ialistannen.htmljavadocparser.model.properties.Invocable;
 import de.ialistannen.htmljavadocparser.model.types.JavadocAnnotation;
-import de.ialistannen.htmljavadocparser.model.types.JavadocInterface;
 import de.ialistannen.htmljavadocparser.model.types.Type;
-import de.ialistannen.htmljavadocparser.parsing.JAnnotationParser;
+import de.ialistannen.htmljavadocparser.parsing.JAnnotationMethodParser;
 import de.ialistannen.htmljavadocparser.resolving.Index;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class JAnnotation implements JavadocAnnotation {
+public class JAnnotationMethod implements Invocable {
 
   private String fullyQualifiedName;
-  private JAnnotationParser parser;
+  private JAnnotationMethodParser parser;
   private Index index;
 
-  public JAnnotation(String fullyQualifiedName, JAnnotationParser parser, Index index) {
+  public JAnnotationMethod(String fullyQualifiedName, Index index, JAnnotationMethodParser parser) {
     this.fullyQualifiedName = fullyQualifiedName;
-    this.parser = parser;
     this.index = index;
+    this.parser = parser;
   }
 
   @Override
@@ -32,25 +32,24 @@ public class JAnnotation implements JavadocAnnotation {
   }
 
   @Override
-  public Optional<Type> getSuperClass() {
-    return Optional.empty();
-  }
-
-  @Override
-  public List<JavadocInterface> getSuperInterfaces() {
+  public List<Parameter> getParameters() {
     return Collections.emptyList();
   }
 
   @Override
-  public List<Invocable> getMethods() {
-    return parser.parseMethods(index);
+  public Type getReturnType() {
+    return index.getTypeForFullNameOrError(parser.parseReturnType());
+  }
+
+  @Override
+  public List<Type> getThrows() {
+    return Collections.emptyList();
   }
 
   @Override
   public List<JavadocAnnotation> getAnnotations() {
     return parser.parseAnnotations().stream()
-        .map(index::getTypeForFullNameOrError)
-        .map(type -> (JavadocAnnotation) type)
+        .map(s -> (JavadocAnnotation) index.getTypeForFullNameOrError(s))
         .collect(Collectors.toList());
   }
 
@@ -81,19 +80,17 @@ public class JAnnotation implements JavadocAnnotation {
 
   @Override
   public VisibilityLevel getVisibility() {
-    return parser.parseVisibilityLevel();
+    return VisibilityLevel.PUBLIC;
+  }
+
+  @Override
+  public Collection<ControlModifier> getOverrideControlModifier() {
+    return List.of(ControlModifier.FINAL);
   }
 
   @Override
   public Type getDeclaredOwner() {
-    String simpleName = getSimpleName();
-    if (simpleName.contains(".")) {
-      String packageName = getPackage().getFullyQualifiedName();
-      String outerFqn = packageName + "." + simpleName.split("\\.")[0];
-
-      return index.getTypeForFullNameOrError(outerFqn);
-    }
-    return this;
+    return index.getTypeForFullNameOrError(parser.parseActualOwner());
   }
 
   @Override
@@ -103,7 +100,7 @@ public class JAnnotation implements JavadocAnnotation {
 
   @Override
   public String toString() {
-    return "JAnnotation{" + fullyQualifiedName + '}';
+    return "JAnnotationMethod{" + fullyQualifiedName + '}';
   }
 
   @Override
@@ -114,8 +111,8 @@ public class JAnnotation implements JavadocAnnotation {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    JAnnotation that = (JAnnotation) o;
-    return Objects.equals(fullyQualifiedName, that.fullyQualifiedName);
+    JAnnotationMethod method = (JAnnotationMethod) o;
+    return Objects.equals(fullyQualifiedName, method.fullyQualifiedName);
   }
 
   @Override
