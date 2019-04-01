@@ -99,6 +99,11 @@ public class JAnnotationMethod implements Invocable {
   }
 
   @Override
+  public boolean isStatic() {
+    return false;
+  }
+
+  @Override
   public String toString() {
     return "JAnnotationMethod{" + fullyQualifiedName + '}';
   }

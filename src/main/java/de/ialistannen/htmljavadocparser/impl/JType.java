@@ -229,6 +229,7 @@ public class JType implements Type {
     System.out.println("Override modifier : " + method.getOverrideControlModifier());
     System.out.println("Annotations       : " + method.getAnnotations());
     System.out.println("Thrown exceptions : " + method.getThrows());
+    System.out.println("Static            : " + method.isStatic());
   }
 
   private static void printFieldInfo(JavadocField field) {

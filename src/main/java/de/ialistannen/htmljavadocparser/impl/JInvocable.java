@@ -118,6 +118,11 @@ public class JInvocable implements Invocable {
   }
 
   @Override
+  public boolean isStatic() {
+    return parser.parseIsStatic();
+  }
+
+  @Override
   public String toString() {
     return "JInvocable{" + fullyQualifiedName + '}';
   }

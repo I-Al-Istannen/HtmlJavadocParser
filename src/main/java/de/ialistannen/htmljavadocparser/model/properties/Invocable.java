@@ -19,6 +19,13 @@ public interface Invocable extends Nameable, Overridable, Deprecatable, Ownable,
   List<Parameter> getParameters();
 
   /**
+   * Returns whether this invocable is a static method.
+   *
+   * @return true if this invocable is a static method.
+   */
+  boolean isStatic();
+
+  /**
    * Returns the return type.
    *
    * @return the return type

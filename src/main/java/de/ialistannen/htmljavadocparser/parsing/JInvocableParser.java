@@ -82,7 +82,9 @@ public class JInvocableParser {
 
     // no link, so it was a primitive type
     if (returnTypeLink == null) {
-      return returnTypeTd.text();
+      return returnTypeTd.text()
+          .replace("static", "")
+          .trim();
     }
 
     return linkToFqn(returnTypeLink.attr("href"));
@@ -181,6 +183,21 @@ public class JInvocableParser {
     }
 
     return false;
+  }
+
+  public boolean parseIsStatic() {
+    Element row = summaryLink();
+    while (!row.tagName().equals("tr")) {
+      row = row.parent();
+    }
+
+    // constructor
+    if (!row.getElementsByClass("colConstructorName").isEmpty()) {
+      return false;
+    }
+
+    Element returnTypeTd = row.getElementsByClass("colFirst").first();
+    return !returnTypeTd.getElementsContainingOwnText("static").isEmpty();
   }
 
   private String removeArraySyntax(String string) {
