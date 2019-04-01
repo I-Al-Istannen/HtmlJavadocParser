@@ -40,7 +40,7 @@ public class JFieldParser {
   }
 
   public String parseDeclaration() {
-    Elements preElement = element().select("ul.blockListLast > li > pre");
+    Elements preElement = element().select("li > pre");
     return StringUtils.normalizeWhitespace(preElement.text());
   }
 

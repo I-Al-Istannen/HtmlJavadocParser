@@ -2,12 +2,14 @@ package de.ialistannen.htmljavadocparser.resolving;
 
 import de.ialistannen.htmljavadocparser.impl.JAnnotation;
 import de.ialistannen.htmljavadocparser.impl.JClass;
+import de.ialistannen.htmljavadocparser.impl.JEnum;
 import de.ialistannen.htmljavadocparser.impl.JInterface;
 import de.ialistannen.htmljavadocparser.impl.JPackage;
 import de.ialistannen.htmljavadocparser.impl.JType;
 import de.ialistannen.htmljavadocparser.model.JavadocPackage;
 import de.ialistannen.htmljavadocparser.model.types.Type;
 import de.ialistannen.htmljavadocparser.parsing.JClassParser;
+import de.ialistannen.htmljavadocparser.parsing.JEnumParser;
 import de.ialistannen.htmljavadocparser.parsing.JTypeParser;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,6 +70,13 @@ public class HtmlSummaryParser {
             new JClassParser(url, documentResolver)
         );
         typeCache.add(jInterface);
+      } else if (a.attr("title").contains("enum in")) {
+        JEnum jjEnum = new JEnum(
+            extractFqn(document, url),
+            index,
+            new JEnumParser(url, documentResolver)
+        );
+        typeCache.add(jjEnum);
       } else {
         JType type = new JType(
             extractFqn(document, url),

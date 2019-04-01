@@ -6,8 +6,10 @@ import de.ialistannen.htmljavadocparser.model.JavadocField;
 import de.ialistannen.htmljavadocparser.model.JavadocPackage;
 import de.ialistannen.htmljavadocparser.model.doc.JavadocComment;
 import de.ialistannen.htmljavadocparser.model.properties.Invocable;
+import de.ialistannen.htmljavadocparser.model.properties.Nameable;
 import de.ialistannen.htmljavadocparser.model.types.JavadocAnnotation;
 import de.ialistannen.htmljavadocparser.model.types.JavadocClass;
+import de.ialistannen.htmljavadocparser.model.types.JavadocEnum;
 import de.ialistannen.htmljavadocparser.model.types.JavadocInterface;
 import de.ialistannen.htmljavadocparser.model.types.Type;
 import de.ialistannen.htmljavadocparser.parsing.JTypeParser;
@@ -163,6 +165,12 @@ public class JType implements Type {
     printClassInfo(
         (JavadocClass) index.getTypeForFullNameOrError("javax.swing.JApplet")
     );
+
+    System.out.println();
+    System.out.println("----");
+    printEnumInfo((JavadocEnum) index
+        .getTypeForFullNameOrError("java.nio.file.StandardCopyOption")
+    );
   }
 
   private static void printClassInfo(JavadocClass javadocClass) {
@@ -171,6 +179,15 @@ public class JType implements Type {
     System.out.println("Constructors:     : " + javadocClass.getConstructors());
     System.out.println("Generic types:    : " + javadocClass.getGenericTypes());
     System.out.println("Override modifier : " + javadocClass.getOverrideControlModifier());
+  }
+
+  private static void printEnumInfo(JavadocEnum javadocEnum) {
+    printTypeInfo(javadocEnum);
+    System.out.println("Constants         : " + javadocEnum.getConstants());
+    for (Nameable constant : javadocEnum.getConstants()) {
+      System.out.println();
+      printFieldInfo((JavadocField) constant);
+    }
   }
 
   private static void printTypeInfo(Type type) {
