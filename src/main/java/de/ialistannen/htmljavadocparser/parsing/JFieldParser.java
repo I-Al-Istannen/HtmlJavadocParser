@@ -4,6 +4,7 @@ import de.ialistannen.htmljavadocparser.model.properties.HasVisibility.Visibilit
 import de.ialistannen.htmljavadocparser.model.properties.Overridable.ControlModifier;
 import de.ialistannen.htmljavadocparser.resolving.DocumentResolver;
 import de.ialistannen.htmljavadocparser.util.LinkUtils;
+import de.ialistannen.htmljavadocparser.util.StringUtils;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -40,16 +41,11 @@ public class JFieldParser {
 
   public String parseDeclaration() {
     Elements preElement = element().select("ul.blockListLast > li > pre");
-    return preElement.text().replaceAll("\\s+", " ");
+    return StringUtils.normalizeWhitespace(preElement.text());
   }
 
   public VisibilityLevel parseVisibilityLevel() {
-    String firstModifier = parseDeclaration().split(" ")[0];
-    try {
-      return VisibilityLevel.valueOf(firstModifier.toUpperCase());
-    } catch (IllegalArgumentException e) {
-      return VisibilityLevel.PACKAGE_PRIVATE;
-    }
+    return ParserHelper.parseVisibilityLevel(parseDeclaration());
   }
 
   public Collection<ControlModifier> parseControlModifiers() {

@@ -8,6 +8,7 @@ import de.ialistannen.htmljavadocparser.model.properties.HasVisibility.Visibilit
 import de.ialistannen.htmljavadocparser.model.properties.Invocable;
 import de.ialistannen.htmljavadocparser.resolving.DocumentResolver;
 import de.ialistannen.htmljavadocparser.resolving.Index;
+import de.ialistannen.htmljavadocparser.util.StringUtils;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class JTypeParser {
   public String parseDeclaration() {
     Element typeDescriptionPre = getTypeDeclarationPre();
 
-    return typeDescriptionPre.text().replaceAll("\\n", " ");
+    return StringUtils.normalizeWhitespace(typeDescriptionPre.text());
   }
 
   private Element getTypeDeclarationPre() {
@@ -72,7 +73,8 @@ public class JTypeParser {
   }
 
   public String parseSimpleName() {
-    return document().selectFirst(".title").text().split(" ")[1]
+    return StringUtils.normalizeWhitespace(document().selectFirst(".title").text())
+        .split(" ")[1]
         .replaceAll("<.+", "");
   }
 
@@ -98,12 +100,7 @@ public class JTypeParser {
   }
 
   public VisibilityLevel parseVisibilityLevel() {
-    String firstModifier = parseDeclaration().split(" ")[0];
-    try {
-      return VisibilityLevel.valueOf(firstModifier.toUpperCase());
-    } catch (IllegalArgumentException e) {
-      return VisibilityLevel.PACKAGE_PRIVATE;
-    }
+    return ParserHelper.parseVisibilityLevel(parseDeclaration());
   }
 
   public List<String> parseAnnotations() {

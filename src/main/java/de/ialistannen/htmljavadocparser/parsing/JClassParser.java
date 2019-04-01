@@ -12,6 +12,7 @@ import de.ialistannen.htmljavadocparser.model.types.Type;
 import de.ialistannen.htmljavadocparser.resolving.DocumentResolver;
 import de.ialistannen.htmljavadocparser.resolving.Index;
 import de.ialistannen.htmljavadocparser.util.LinkUtils;
+import de.ialistannen.htmljavadocparser.util.StringUtils;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -69,7 +70,7 @@ public class JClassParser extends JTypeParser {
 
   public List<GenericType> parseGenericTypes(Index index) {
     Element typeNameLabel = document().getElementsByClass("typeNameLabel").first();
-    String typeName = typeNameLabel.text();
+    String typeName = StringUtils.normalizeWhitespace(typeNameLabel.text());
 
     if (!typeName.contains("<")) {
       return Collections.emptyList();
@@ -128,6 +129,6 @@ public class JClassParser extends JTypeParser {
     if (name.equals(parseSimpleName())) {
       return index.getTypeForFullNameOrError(parsePackage() + "." + parseSimpleName());
     }
-    return new GenericTypeProxy(root.text(), name);
+    return new GenericTypeProxy(StringUtils.normalizeWhitespace(root.text()), name);
   }
 }

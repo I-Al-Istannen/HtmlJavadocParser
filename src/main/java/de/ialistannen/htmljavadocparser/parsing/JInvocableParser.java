@@ -7,6 +7,7 @@ import de.ialistannen.htmljavadocparser.model.properties.Deprecatable.Deprecatio
 import de.ialistannen.htmljavadocparser.model.properties.HasVisibility.VisibilityLevel;
 import de.ialistannen.htmljavadocparser.model.properties.Overridable.ControlModifier;
 import de.ialistannen.htmljavadocparser.resolving.DocumentResolver;
+import de.ialistannen.htmljavadocparser.util.StringUtils;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
@@ -41,23 +42,16 @@ public class JInvocableParser {
 
   private Element summaryLink() {
     Document document = resolver.resolve(url);
-    Element href = document.getElementsByAttributeValueEnding("href", "#" + urlFragment(url))
+    return document.getElementsByAttributeValueEnding("href", "#" + urlFragment(url))
         .first();
-    return href;
   }
 
   public String parseDeclaration() {
-    return element().getElementsByTag("pre").first().text()
-        .replaceAll("\\s+", " ");
+    return StringUtils.normalizeWhitespace(element().getElementsByTag("pre").first().text());
   }
 
   public VisibilityLevel parseVisibilityLevel() {
-    String firstModifier = parseDeclaration().split(" ")[0];
-    try {
-      return VisibilityLevel.valueOf(firstModifier.toUpperCase());
-    } catch (IllegalArgumentException e) {
-      return VisibilityLevel.PACKAGE_PRIVATE;
-    }
+    return ParserHelper.parseVisibilityLevel(parseDeclaration());
   }
 
   public String parseSimpleName() {
