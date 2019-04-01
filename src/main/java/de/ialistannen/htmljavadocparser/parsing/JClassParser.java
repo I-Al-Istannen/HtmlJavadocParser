@@ -3,12 +3,8 @@ package de.ialistannen.htmljavadocparser.parsing;
 import de.ialistannen.htmljavadocparser.impl.JField;
 import de.ialistannen.htmljavadocparser.model.JavadocField;
 import de.ialistannen.htmljavadocparser.model.generic.GenericType;
-import de.ialistannen.htmljavadocparser.model.generic.GenericType.Bound;
-import de.ialistannen.htmljavadocparser.model.generic.GenericType.Bound.BindingType;
-import de.ialistannen.htmljavadocparser.model.generic.GenericTypeProxy;
 import de.ialistannen.htmljavadocparser.model.properties.Invocable;
 import de.ialistannen.htmljavadocparser.model.properties.Overridable.ControlModifier;
-import de.ialistannen.htmljavadocparser.model.types.Type;
 import de.ialistannen.htmljavadocparser.resolving.DocumentResolver;
 import de.ialistannen.htmljavadocparser.resolving.Index;
 import de.ialistannen.htmljavadocparser.util.LinkUtils;
@@ -72,64 +68,13 @@ public class JClassParser extends JTypeParser {
     Element typeNameLabel = document().getElementsByClass("typeNameLabel").first();
     String typeName = StringUtils.normalizeWhitespace(typeNameLabel.text());
 
-    if (!typeName.contains("<")) {
-      return Collections.emptyList();
-    }
-
-    // Replace "Name<"
-    typeName = typeName.replaceAll(".+?<(.+)", "$1");
-    // Remove the last closing >
-    typeName = typeName.substring(0, typeName.length() - 1);
-
-    String[] parts = typeName.split(", ");
-
-    return Arrays.stream(parts)
-        .map(genericTypes -> parseGenericType(index, typeNameLabel, genericTypes))
-        .collect(Collectors.toList());
-  }
-
-  private GenericType parseGenericType(Index index, Element root, String string) {
-    // Just the type
-    if (!string.contains("<") && !string.contains(" ")) {
-      Type type = findTypeForName(index, root, string);
-      return new GenericType(type, List.of());
-    }
-
-    // It is sth like "Enum<E>"
-    if (!string.contains(" ")) {
-      String name = string.substring(0, string.indexOf('<'));
-      Type type = findTypeForName(index, root, name);
-      String rest = string.substring(string.indexOf('<') + 1, string.lastIndexOf('>'));
-      GenericType restType = parseGenericType(index, root, rest);
-
-      Bound bound = new Bound(restType, BindingType.EXACT);
-
-      return new GenericType(type, List.of(bound));
-    }
-
-    // Has a bound like X extends|super Y
-    String[] parts = string.split("\\s");
-    String name = parts[0];
-    Type rawType = findTypeForName(index, root, name);
-
-    BindingType type = BindingType.forName(parts[1]);
-    String rest = parts[2];
-
-    GenericType genericType = parseGenericType(index, root, rest);
-    Bound bound = new Bound(genericType, type);
-    return new GenericType(rawType, List.of(bound));
-  }
-
-  private Type findTypeForName(Index index, Element root, String name) {
-    for (Element link : root.getElementsByTag("a")) {
-      if (link.ownText().matches(name + "\\b")) {
-        return index.getTypeForFullNameOrError(LinkUtils.linkToFqn(link.attr("href")));
-      }
-    }
-    if (name.equals(parseSimpleName())) {
-      return index.getTypeForFullNameOrError(parsePackage() + "." + parseSimpleName());
-    }
-    return new GenericTypeProxy(StringUtils.normalizeWhitespace(root.text()), name);
+    return ParserHelper.parseGenericTypes(
+        index,
+        typeNameLabel,
+        typeName,
+        parseSimpleName(),
+        parsePackage() + "." + parseSimpleName()
+    );
   }
 
   public boolean parseIsStatic() {

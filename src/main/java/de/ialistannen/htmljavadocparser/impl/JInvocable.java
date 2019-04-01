@@ -2,6 +2,7 @@ package de.ialistannen.htmljavadocparser.impl;
 
 import de.ialistannen.htmljavadocparser.model.JavadocPackage;
 import de.ialistannen.htmljavadocparser.model.doc.JavadocComment;
+import de.ialistannen.htmljavadocparser.model.generic.GenericType;
 import de.ialistannen.htmljavadocparser.model.properties.Invocable;
 import de.ialistannen.htmljavadocparser.model.types.JavadocAnnotation;
 import de.ialistannen.htmljavadocparser.model.types.Type;
@@ -120,6 +121,11 @@ public class JInvocable implements Invocable {
   @Override
   public boolean isStatic() {
     return parser.parseIsStatic();
+  }
+
+  @Override
+  public List<GenericType> getGenericTypes() {
+    return parser.parseGenericTypes(index);
   }
 
   @Override

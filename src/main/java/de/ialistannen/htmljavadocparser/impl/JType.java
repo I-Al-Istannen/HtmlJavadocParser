@@ -190,11 +190,21 @@ public class JType implements Type {
 
     System.out.println();
     System.out.println("----");
+    JavadocClass mapClass = (JavadocClass) index.getTypeForFullNameOrError("java.util.Map");
+    printClassInfo(mapClass);
+    System.out.println();
+    mapClass.getMethods().stream()
+        .filter(invocable -> invocable.getSimpleName().equals("ofEntries"))
+        .findFirst()
+        .ifPresent(JType::printInvocableInfo);
+
+    System.out.println();
+    System.out.println("----");
     JavadocClass listClass = (JavadocClass) index.getTypeForFullNameOrError("java.util.List");
     printClassInfo(listClass);
     System.out.println();
     listClass.getMethods().stream()
-        .filter(invocable -> invocable.getSimpleName().equals("toArray"))
+        .filter(invocable -> invocable.getSimpleName().equals("get"))
         .filter(invocable -> invocable.getParameters().size() == 1)
         .findFirst()
         .ifPresent(JType::printInvocableInfo);
@@ -255,6 +265,7 @@ public class JType implements Type {
     System.out.println("Original owner    : " + method.getOriginalOwner());
     System.out.println("Override modifier : " + method.getOverrideControlModifier());
     System.out.println("Annotations       : " + method.getAnnotations());
+    System.out.println("Generic types     : " + method.getGenericTypes());
     System.out.println("Thrown exceptions : " + method.getThrows());
     System.out.println("Static            : " + method.isStatic());
   }

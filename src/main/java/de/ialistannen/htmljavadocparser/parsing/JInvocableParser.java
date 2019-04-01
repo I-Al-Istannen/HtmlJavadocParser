@@ -3,10 +3,12 @@ package de.ialistannen.htmljavadocparser.parsing;
 import static de.ialistannen.htmljavadocparser.util.LinkUtils.linkToFqn;
 import static de.ialistannen.htmljavadocparser.util.LinkUtils.urlFragment;
 
+import de.ialistannen.htmljavadocparser.model.generic.GenericType;
 import de.ialistannen.htmljavadocparser.model.properties.Deprecatable.DeprecationStatus;
 import de.ialistannen.htmljavadocparser.model.properties.HasVisibility.VisibilityLevel;
 import de.ialistannen.htmljavadocparser.model.properties.Overridable.ControlModifier;
 import de.ialistannen.htmljavadocparser.resolving.DocumentResolver;
+import de.ialistannen.htmljavadocparser.resolving.Index;
 import de.ialistannen.htmljavadocparser.util.StringUtils;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -52,7 +54,10 @@ public class JInvocableParser {
   private Element summaryLink() {
     Document document = resolver().resolve(url);
     return document.getElementsByAttributeValueEnding("href", "#" + urlFragment(url))
-        .first();
+        .stream()
+        .filter(element -> element.parent().hasClass("memberNameLink"))
+        .findFirst()
+        .orElseThrow();
   }
 
   public String parseDeclaration() {
@@ -60,7 +65,15 @@ public class JInvocableParser {
   }
 
   public VisibilityLevel parseVisibilityLevel() {
+    if (isInInterface()) {
+      return VisibilityLevel.PUBLIC;
+    }
     return ParserHelper.parseVisibilityLevel(parseDeclaration());
+  }
+
+  private boolean isInInterface() {
+    return element().ownerDocument().getElementsByClass("title").first().ownText()
+        .startsWith("Interface");
   }
 
   public String parseSimpleName() {
@@ -91,10 +104,11 @@ public class JInvocableParser {
     String parameters = fullLink.replaceAll(".+\\((.+)\\).*", "$1");
     for (String parameter : parameters.split(", ")) {
       String[] parts = parameter.split(" ");
-      String type = parts[0];
-      String name = parts[1];
+      String type = parts[0].replaceAll("<.+", ""); // remove generics
+      String name = parts[1].replaceAll("<.+", ""); // remove generics
 
       Element linkElement = codeSummary.getElementsMatchingText(Pattern.quote(type)).last();
+
       if (linkElement != null && linkElement.tagName().equals("a")) {
         type = linkToFqn(linkElement.attr("href"));
       }
@@ -172,5 +186,35 @@ public class JInvocableParser {
 
   public boolean parseIsStatic() {
     return ParserHelper.parseIsStatic(parseDeclaration());
+  }
+
+  public List<GenericType> parseGenericTypes(Index index) {
+    String declaration = parseDeclaration();
+    String returnType = parseReturnType(); // is a raw type without generics
+
+    int returnTypeStartIndex = -1;
+    for (String part : declaration.split("[ (]")) {
+      String cleanedPart = part.replaceAll("<.+>", "");
+      if (!cleanedPart.trim().isEmpty() && returnType.endsWith(cleanedPart)) {
+        returnTypeStartIndex = declaration.indexOf(part);
+        break;
+      }
+    }
+
+    if (returnTypeStartIndex < 0) {
+      return Collections.emptyList();
+    }
+
+    String partBeforeReturn = declaration.substring(0, returnTypeStartIndex).trim();
+
+    String generics = partBeforeReturn.replaceAll(".*?(<.+>).*?", "$1");
+
+    return ParserHelper.parseGenericTypes(
+        index,
+        element(),
+        generics,
+        parseSimpleName(),
+        parsePackage() + "." + parseSimpleName()
+    );
   }
 }
