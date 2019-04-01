@@ -32,7 +32,7 @@ public interface Type extends Nameable, AnnotationTarget, Deprecatable, Ownable 
    *
    * @return all super interfaces
    */
-  List<Type> getSuperInterfaces();
+  List<JavadocInterface> getSuperInterfaces();
 
   /**
    * Returns all methods in this type.

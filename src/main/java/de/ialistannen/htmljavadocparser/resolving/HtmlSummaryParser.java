@@ -2,6 +2,7 @@ package de.ialistannen.htmljavadocparser.resolving;
 
 import de.ialistannen.htmljavadocparser.impl.JAnnotation;
 import de.ialistannen.htmljavadocparser.impl.JClass;
+import de.ialistannen.htmljavadocparser.impl.JInterface;
 import de.ialistannen.htmljavadocparser.impl.JPackage;
 import de.ialistannen.htmljavadocparser.impl.JType;
 import de.ialistannen.htmljavadocparser.model.JavadocPackage;
@@ -60,6 +61,13 @@ public class HtmlSummaryParser {
             new JClassParser(url, documentResolver)
         );
         typeCache.add(jClass);
+      } else if (a.attr("title").contains("interface in")) {
+        JInterface jInterface = new JInterface(
+            extractFqn(document, url),
+            index,
+            new JClassParser(url, documentResolver)
+        );
+        typeCache.add(jInterface);
       } else {
         JType type = new JType(
             extractFqn(document, url),

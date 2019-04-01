@@ -4,6 +4,7 @@ import de.ialistannen.htmljavadocparser.model.JavadocPackage;
 import de.ialistannen.htmljavadocparser.model.doc.JavadocComment;
 import de.ialistannen.htmljavadocparser.model.properties.Invocable;
 import de.ialistannen.htmljavadocparser.model.types.JavadocAnnotation;
+import de.ialistannen.htmljavadocparser.model.types.JavadocInterface;
 import de.ialistannen.htmljavadocparser.model.types.Type;
 import de.ialistannen.htmljavadocparser.parsing.JTypeParser;
 import de.ialistannen.htmljavadocparser.resolving.Index;
@@ -36,7 +37,7 @@ public class JAnnotation implements JavadocAnnotation {
   }
 
   @Override
-  public List<Type> getSuperInterfaces() {
+  public List<JavadocInterface> getSuperInterfaces() {
     return Collections.emptyList();
   }
 

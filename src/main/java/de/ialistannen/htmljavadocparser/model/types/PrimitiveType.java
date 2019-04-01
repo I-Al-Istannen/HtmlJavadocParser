@@ -37,7 +37,7 @@ public enum PrimitiveType implements Type {
   }
 
   @Override
-  public List<Type> getSuperInterfaces() {
+  public List<JavadocInterface> getSuperInterfaces() {
     return Collections.emptyList();
   }
 

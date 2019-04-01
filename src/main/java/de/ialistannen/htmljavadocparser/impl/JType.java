@@ -8,13 +8,13 @@ import de.ialistannen.htmljavadocparser.model.doc.JavadocComment;
 import de.ialistannen.htmljavadocparser.model.properties.Invocable;
 import de.ialistannen.htmljavadocparser.model.types.JavadocAnnotation;
 import de.ialistannen.htmljavadocparser.model.types.JavadocClass;
+import de.ialistannen.htmljavadocparser.model.types.JavadocInterface;
 import de.ialistannen.htmljavadocparser.model.types.Type;
 import de.ialistannen.htmljavadocparser.parsing.JTypeParser;
 import de.ialistannen.htmljavadocparser.resolving.DocumentResolver;
 import de.ialistannen.htmljavadocparser.resolving.HtmlSummaryParser;
 import de.ialistannen.htmljavadocparser.resolving.Index;
 import de.ialistannen.htmljavadocparser.resolving.LocalFileResolver;
-import de.ialistannen.htmljavadocparser.util.Memoized;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,41 +26,29 @@ public class JType implements Type {
   private final String fullyQualifiedName;
   protected final Index index;
   private JTypeParser jTypeParser;
-  private Memoized<String> declaration;
-  private Memoized<Optional<Type>> superclass;
-  private Memoized<List<Type>> superInterfaces;
-  private Memoized<VisibilityLevel> visiblity;
 
   public JType(String fullyQualifiedName, Index index, JTypeParser jTypeParser) {
     this.fullyQualifiedName = fullyQualifiedName;
     this.index = index;
     this.jTypeParser = jTypeParser;
-
-    declaration = new Memoized<>(jTypeParser::parseDeclaration);
-    superclass = new Memoized<>(
-        () -> jTypeParser.parseSuperClass().map(index::getTypeForFullNameOrError)
-    );
-    superInterfaces = new Memoized<>(
-        () -> jTypeParser.parseSuperInterfaces().stream()
-            .map(index::getTypeForFullNameOrError)
-            .collect(toList())
-    );
-    visiblity = new Memoized<>(jTypeParser::parseVisibilityLevel);
   }
 
   @Override
   public String getDeclaration() {
-    return declaration.get();
+    return jTypeParser.parseDeclaration();
   }
 
   @Override
   public Optional<Type> getSuperClass() {
-    return superclass.get();
+    return jTypeParser.parseSuperClass().map(index::getTypeForFullNameOrError);
   }
 
   @Override
-  public List<Type> getSuperInterfaces() {
-    return superInterfaces.get();
+  public List<JavadocInterface> getSuperInterfaces() {
+    return jTypeParser.parseSuperInterfaces().stream()
+        .map(index::getTypeForFullNameOrError)
+        .map(type -> (JavadocInterface) type)
+        .collect(toList());
   }
 
   @Override
@@ -104,7 +92,7 @@ public class JType implements Type {
 
   @Override
   public VisibilityLevel getVisibility() {
-    return visiblity.get();
+    return jTypeParser.parseVisibilityLevel();
   }
 
   @Override
