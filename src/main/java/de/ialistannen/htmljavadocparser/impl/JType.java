@@ -190,7 +190,14 @@ public class JType implements Type {
 
     System.out.println();
     System.out.println("----");
-    printClassInfo((JavadocClass) index.getTypeForFullNameOrError("java.util.List"));
+    JavadocClass listClass = (JavadocClass) index.getTypeForFullNameOrError("java.util.List");
+    printClassInfo(listClass);
+    System.out.println();
+    listClass.getMethods().stream()
+        .filter(invocable -> invocable.getSimpleName().equals("toArray"))
+        .filter(invocable -> invocable.getParameters().size() == 1)
+        .findFirst()
+        .ifPresent(JType::printInvocableInfo);
 
     System.out.println();
     System.out.println("----");
