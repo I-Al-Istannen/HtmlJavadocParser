@@ -141,6 +141,46 @@ public class JType implements Type {
     index.addPackages(summaryParser.getPackages());
 
     Type type = index.getTypeForFullNameOrError("java.lang.String");
+    printTypeInfo(type);
+
+    printClassInfo((JavadocClass) type);
+
+    System.out.println();
+    printInvocableInfo(((JavadocClass) type).getConstructors().get(2));
+
+    System.out.println();
+    printFieldInfo(((JavadocClass) type).getFields().get(0));
+
+    System.out.println();
+    System.out.println();
+    Invocable method = type.getMethods().stream()
+        .filter(invocable -> invocable.getSimpleName().equals("getBytes"))
+        .filter(invocable -> invocable.getParameters().size() == 1)
+        .findFirst()
+        .orElseThrow();
+    printInvocableInfo(method);
+
+    System.out.println();
+    System.out.println();
+    printClassInfo(
+        (JavadocClass) index.getTypeForFullNameOrError("javax.tools.ForwardingFileObject")
+    );
+
+    System.out.println();
+    System.out.println();
+    printClassInfo(
+        (JavadocClass) index.getTypeForFullNameOrError("java.lang.Enum")
+    );
+  }
+
+  private static void printClassInfo(JavadocClass javadocClass) {
+    System.out.println("Fields:           : " + javadocClass.getFields());
+    System.out.println("Constructors:     : " + javadocClass.getConstructors());
+    System.out.println("Generic types:    : " + javadocClass.getGenericTypes());
+    System.out.println("Override modifier : " + javadocClass.getOverrideControlModifier());
+  }
+
+  private static void printTypeInfo(Type type) {
     System.out.println("Declaration       : " + type.getDeclaration());
     System.out.println("Simple name       : " + type.getSimpleName());
     System.out.println("Fully qualified   : " + type.getFullyQualifiedName());
@@ -153,27 +193,6 @@ public class JType implements Type {
     System.out.println("Original owner    : " + type.getOriginalOwner());
     System.out.println("Annotations       : " + type.getAnnotations());
     System.out.println("Methods           : " + type.getMethods());
-
-    JavadocClass javadocClass = (JavadocClass) type;
-    System.out.println("Fields:           : " + javadocClass.getFields());
-    System.out.println("Constructors:     : " + javadocClass.getConstructors());
-    System.out.println("Generic types:    : " + javadocClass.getGenericTypes());
-    System.out.println("Override modifier : " + javadocClass.getOverrideControlModifier());
-
-    System.out.println();
-    printInvocableInfo(javadocClass.getConstructors().get(2));
-
-    System.out.println();
-    printFieldInfo(javadocClass.getFields().get(0));
-
-    System.out.println();
-    System.out.println();
-    Invocable method = type.getMethods().stream()
-        .filter(invocable -> invocable.getSimpleName().equals("getBytes"))
-        .filter(invocable -> invocable.getParameters().size() == 1)
-        .findFirst()
-        .orElseThrow();
-    printInvocableInfo(method);
   }
 
   private static void printInvocableInfo(Invocable method) {

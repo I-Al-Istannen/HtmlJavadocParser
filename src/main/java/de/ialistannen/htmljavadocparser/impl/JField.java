@@ -7,6 +7,7 @@ import de.ialistannen.htmljavadocparser.model.types.Type;
 import de.ialistannen.htmljavadocparser.parsing.JFieldParser;
 import de.ialistannen.htmljavadocparser.resolving.Index;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Optional;
 
 public class JField implements JavadocField {
@@ -64,5 +65,27 @@ public class JField implements JavadocField {
   @Override
   public Type getOriginalOwner() {
     return getDeclaredOwner();
+  }
+
+  @Override
+  public String toString() {
+    return "JField{" + fullyQualifiedName + '}';
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    JField jField = (JField) o;
+    return Objects.equals(fullyQualifiedName, jField.fullyQualifiedName);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(fullyQualifiedName);
   }
 }

@@ -72,7 +72,8 @@ public class JTypeParser {
   }
 
   public String parseSimpleName() {
-    return document().selectFirst(".title").text().split(" ")[1];
+    return document().selectFirst(".title").text().split(" ")[1]
+        .replaceAll("<.+", "");
   }
 
   /**

@@ -1,6 +1,6 @@
 package de.ialistannen.htmljavadocparser.model.types;
 
-import de.ialistannen.htmljavadocparser.model.GenericType;
+import de.ialistannen.htmljavadocparser.model.generic.GenericType;
 import de.ialistannen.htmljavadocparser.model.properties.Invocable;
 import de.ialistannen.htmljavadocparser.model.JavadocField;
 import de.ialistannen.htmljavadocparser.model.properties.Overridable;
