@@ -1,7 +1,7 @@
 package de.ialistannen.htmljavadocparser.impl;
 
-import de.ialistannen.htmljavadocparser.model.generic.GenericType;
 import de.ialistannen.htmljavadocparser.model.JavadocField;
+import de.ialistannen.htmljavadocparser.model.generic.GenericType;
 import de.ialistannen.htmljavadocparser.model.properties.Invocable;
 import de.ialistannen.htmljavadocparser.model.types.JavadocClass;
 import de.ialistannen.htmljavadocparser.parsing.JClassParser;
@@ -36,6 +36,11 @@ public class JClass extends JType implements JavadocClass {
   @Override
   public Collection<ControlModifier> getOverrideControlModifier() {
     return parser.parseControlModifiers();
+  }
+
+  @Override
+  public boolean isStatic() {
+    return parser.parseIsStatic();
   }
 
   @Override

@@ -1,8 +1,8 @@
 package de.ialistannen.htmljavadocparser.model.types;
 
+import de.ialistannen.htmljavadocparser.model.JavadocField;
 import de.ialistannen.htmljavadocparser.model.generic.GenericType;
 import de.ialistannen.htmljavadocparser.model.properties.Invocable;
-import de.ialistannen.htmljavadocparser.model.JavadocField;
 import de.ialistannen.htmljavadocparser.model.properties.Overridable;
 import java.util.List;
 
@@ -31,4 +31,11 @@ public interface JavadocClass extends Type, Overridable {
    * @return all fields
    */
   List<JavadocField> getFields();
+
+  /**
+   * Returns whether this is a static class.
+   *
+   * @return true if this is a static class
+   */
+  boolean isStatic();
 }

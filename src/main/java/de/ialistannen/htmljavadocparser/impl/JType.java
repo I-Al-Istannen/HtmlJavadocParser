@@ -181,6 +181,12 @@ public class JType implements Type {
       System.out.println();
       printInvocableInfo(invocable);
     }
+
+    System.out.println();
+    System.out.println("----");
+    printClassInfo((JavadocClass) index
+        .getTypeForFullNameOrError("java.util.AbstractMap.SimpleEntry")
+    );
   }
 
   private static void printClassInfo(JavadocClass javadocClass) {
@@ -189,6 +195,7 @@ public class JType implements Type {
     System.out.println("Constructors:     : " + javadocClass.getConstructors());
     System.out.println("Generic types:    : " + javadocClass.getGenericTypes());
     System.out.println("Override modifier : " + javadocClass.getOverrideControlModifier());
+    System.out.println("Static            : " + javadocClass.isStatic());
   }
 
   private static void printEnumInfo(JavadocEnum javadocEnum) {

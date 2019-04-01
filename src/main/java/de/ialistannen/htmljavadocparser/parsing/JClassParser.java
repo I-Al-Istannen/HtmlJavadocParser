@@ -131,4 +131,8 @@ public class JClassParser extends JTypeParser {
     }
     return new GenericTypeProxy(StringUtils.normalizeWhitespace(root.text()), name);
   }
+
+  public boolean parseIsStatic() {
+    return ParserHelper.parseIsStatic(parseDeclaration());
+  }
 }

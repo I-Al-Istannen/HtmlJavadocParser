@@ -186,18 +186,7 @@ public class JInvocableParser {
   }
 
   public boolean parseIsStatic() {
-    Element row = summaryLink();
-    while (!row.tagName().equals("tr")) {
-      row = row.parent();
-    }
-
-    // constructor
-    if (!row.getElementsByClass("colConstructorName").isEmpty()) {
-      return false;
-    }
-
-    Element returnTypeTd = row.getElementsByClass("colFirst").first();
-    return !returnTypeTd.getElementsContainingOwnText("static").isEmpty();
+    return ParserHelper.parseIsStatic(parseDeclaration());
   }
 
   private String removeArraySyntax(String string) {
