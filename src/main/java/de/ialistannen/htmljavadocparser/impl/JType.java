@@ -256,6 +256,7 @@ public class JType implements Type {
     System.out.println("Declaration       : " + field.getDeclaration());
     System.out.println("Simple name       : " + field.getSimpleName());
     System.out.println("Fully qualified   : " + field.getFullyQualifiedName());
+    System.out.println("Type              : " + field.getType());
     System.out.println("Visibility        : " + field.getVisibility());
     System.out.println("Package           : " + field.getPackage());
     System.out.println("Declared owner    : " + field.getDeclaredOwner());

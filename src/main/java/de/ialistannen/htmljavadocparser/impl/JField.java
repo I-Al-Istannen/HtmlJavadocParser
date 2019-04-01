@@ -73,6 +73,11 @@ public class JField implements JavadocField {
   }
 
   @Override
+  public Type getType() {
+    return index.getTypeForFullNameOrError(parser.parseType());
+  }
+
+  @Override
   public String toString() {
     return "JField{" + fullyQualifiedName + '}';
   }

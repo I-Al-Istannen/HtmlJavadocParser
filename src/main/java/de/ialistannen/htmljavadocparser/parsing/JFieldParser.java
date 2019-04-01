@@ -70,6 +70,19 @@ public class JFieldParser {
     return ParserHelper.parseIsStatic(parseDeclaration());
   }
 
+  public String parseType() {
+    Element href = element().ownerDocument()
+        .getElementsByAttributeValueEnding("href", "#" + LinkUtils.urlFragment(url))
+        .first();
+
+    Element row = href;
+    while (!row.tagName().equals("tr")) {
+      row = row.parent();
+    }
+
+    return ParserHelper.parseReturnTypeFromMemberSummaryRow(row, parseOwner());
+  }
+
   private boolean isInInterface() {
     return element().ownerDocument().getElementsByClass("title").first()
         .ownText().startsWith("Interface");

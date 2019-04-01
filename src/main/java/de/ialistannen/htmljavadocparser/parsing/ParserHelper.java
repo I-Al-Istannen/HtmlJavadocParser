@@ -1,7 +1,10 @@
 package de.ialistannen.htmljavadocparser.parsing;
 
+import static de.ialistannen.htmljavadocparser.util.LinkUtils.linkToFqn;
+
 import de.ialistannen.htmljavadocparser.model.properties.HasVisibility.VisibilityLevel;
 import java.util.Arrays;
+import org.jsoup.nodes.Element;
 
 final class ParserHelper {
 
@@ -45,4 +48,30 @@ final class ParserHelper {
     return Arrays.asList(modifiers).contains("static");
   }
 
+  /**
+   * Parses the fqn of the return type from the member summary list row.
+   *
+   * @param row the row
+   * @param owner the owning class (used if it is a constructor)
+   * @return the return type
+   */
+  static String parseReturnTypeFromMemberSummaryRow(Element row, String owner) {
+    // constructor
+    if (!row.getElementsByClass("colConstructorName").isEmpty()) {
+      return owner;
+    }
+
+    Element returnTypeTd = row.getElementsByClass("colFirst").first();
+    Element returnTypeLink = returnTypeTd.getElementsByTag("a").first();
+
+    // no link, so it was a primitive type
+    if (returnTypeLink == null) {
+      return returnTypeTd.text()
+          .replace("static", "")
+          .trim();
+    }
+
+    return linkToFqn(returnTypeLink.attr("href")).replaceAll("#.+", "");
+
+  }
 }

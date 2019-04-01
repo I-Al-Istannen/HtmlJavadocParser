@@ -72,23 +72,7 @@ public class JInvocableParser {
     while (!row.tagName().equals("tr")) {
       row = row.parent();
     }
-
-    // constructor
-    if (!row.getElementsByClass("colConstructorName").isEmpty()) {
-      return parseActualOwner();
-    }
-
-    Element returnTypeTd = row.getElementsByClass("colFirst").first();
-    Element returnTypeLink = returnTypeTd.getElementsByTag("a").first();
-
-    // no link, so it was a primitive type
-    if (returnTypeLink == null) {
-      return returnTypeTd.text()
-          .replace("static", "")
-          .trim();
-    }
-
-    return linkToFqn(returnTypeLink.attr("href"));
+    return ParserHelper.parseReturnTypeFromMemberSummaryRow(row, parseActualOwner());
   }
 
   public Map<String, String> parseParameters() {
