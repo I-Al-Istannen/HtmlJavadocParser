@@ -12,8 +12,13 @@ final class ParserHelper {
    */
   static VisibilityLevel parseVisibilityLevel(String declaration) {
     String firstModifier = declaration
+        // remove annotations with arguments
+        .replaceAll("@.+?\\(.+?\\)", "")
+        // remove annotations without arguments
         .replaceAll("@.+? ", "")
+        .trim()
         .split("\\s")[0];
+
     try {
       return VisibilityLevel.valueOf(firstModifier.toUpperCase());
     } catch (IllegalArgumentException e) {

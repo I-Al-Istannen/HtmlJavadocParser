@@ -157,6 +157,12 @@ public class JType implements Type {
     printClassInfo(
         (JavadocClass) index.getTypeForFullNameOrError("java.lang.Enum")
     );
+
+    System.out.println();
+    System.out.println();
+    printClassInfo(
+        (JavadocClass) index.getTypeForFullNameOrError("javax.swing.JApplet")
+    );
   }
 
   private static void printClassInfo(JavadocClass javadocClass) {
