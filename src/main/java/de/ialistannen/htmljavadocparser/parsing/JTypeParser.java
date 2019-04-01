@@ -92,8 +92,13 @@ public class JTypeParser {
    */
   public List<String> parseSuperInterfaces() {
     Element dd = document().getElementsContainingOwnText("All Implemented Interfaces:")
-        .first()
-        .nextElementSibling();
+        .first();
+
+    if (dd == null) {
+      return Collections.emptyList();
+    }
+
+    dd = dd.nextElementSibling();
 
     return dd.children().stream()
         .map(code -> linkToFqn(code.child(0).attr("href")))

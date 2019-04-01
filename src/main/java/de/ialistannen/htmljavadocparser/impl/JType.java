@@ -187,6 +187,19 @@ public class JType implements Type {
     printClassInfo((JavadocClass) index
         .getTypeForFullNameOrError("java.util.AbstractMap.SimpleEntry")
     );
+
+    System.out.println();
+    System.out.println("----");
+    printClassInfo((JavadocClass) index.getTypeForFullNameOrError("java.util.List"));
+
+    System.out.println();
+    System.out.println("----");
+    printClassInfo((JavadocClass) index.getTypeForFullNameOrError("javax.swing.SwingConstants"));
+    System.out.println();
+    printFieldInfo(
+        ((JavadocInterface) index.getTypeForFullNameOrError("javax.swing.SwingConstants"))
+            .getFields().get(0)
+    );
   }
 
   private static void printClassInfo(JavadocClass javadocClass) {
@@ -248,5 +261,6 @@ public class JType implements Type {
     System.out.println("Declared owner    : " + field.getDeclaredOwner());
     System.out.println("Original owner    : " + field.getOriginalOwner());
     System.out.println("Override modifier : " + field.getOverrideControlModifier());
+    System.out.println("Static            : " + field.isStatic());
   }
 }

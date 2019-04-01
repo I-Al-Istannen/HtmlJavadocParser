@@ -10,6 +10,7 @@ import de.ialistannen.htmljavadocparser.model.types.Type;
 import de.ialistannen.htmljavadocparser.parsing.JAnnotationParser;
 import de.ialistannen.htmljavadocparser.parsing.JClassParser;
 import de.ialistannen.htmljavadocparser.parsing.JEnumParser;
+import de.ialistannen.htmljavadocparser.parsing.JInterfaceParser;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -66,7 +67,7 @@ public class HtmlSummaryParser {
         JInterface jInterface = new JInterface(
             extractFqn(document, url),
             index,
-            new JClassParser(url, documentResolver)
+            new JInterfaceParser(url, documentResolver)
         );
         typeCache.add(jInterface);
       } else if (a.attr("title").contains("enum in")) {

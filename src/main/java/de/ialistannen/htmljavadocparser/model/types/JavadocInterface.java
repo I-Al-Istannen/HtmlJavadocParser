@@ -1,8 +1,10 @@
 package de.ialistannen.htmljavadocparser.model.types;
 
+import de.ialistannen.htmljavadocparser.model.properties.HasFields;
+
 /**
  * A javadoc interface.
  */
-public interface JavadocInterface extends Type {
+public interface JavadocInterface extends Type, HasFields {
 
 }

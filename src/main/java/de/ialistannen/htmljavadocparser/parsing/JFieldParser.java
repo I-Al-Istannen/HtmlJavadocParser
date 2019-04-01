@@ -7,6 +7,7 @@ import de.ialistannen.htmljavadocparser.util.LinkUtils;
 import de.ialistannen.htmljavadocparser.util.StringUtils;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.stream.Collectors;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -45,14 +46,32 @@ public class JFieldParser {
   }
 
   public VisibilityLevel parseVisibilityLevel() {
+    if (isInInterface()) {
+      return VisibilityLevel.PUBLIC;
+    }
     return ParserHelper.parseVisibilityLevel(parseDeclaration());
   }
 
   public Collection<ControlModifier> parseControlModifiers() {
     String declaration = parseDeclaration();
 
-    return Arrays.stream(ControlModifier.values())
+    Collection<ControlModifier> modifiers = Arrays.stream(ControlModifier.values())
         .filter(controlModifier -> declaration.contains(controlModifier.getName()))
-        .collect(Collectors.toList());
+        .collect(Collectors.toCollection(HashSet::new));
+
+    if (isInInterface()) {
+      modifiers.add(ControlModifier.FINAL);
+    }
+
+    return modifiers;
+  }
+
+  public boolean parseIsStatic() {
+    return ParserHelper.parseIsStatic(parseDeclaration());
+  }
+
+  private boolean isInInterface() {
+    return element().ownerDocument().getElementsByClass("title").first()
+        .ownText().startsWith("Interface");
   }
 }

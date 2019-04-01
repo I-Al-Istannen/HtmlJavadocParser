@@ -68,6 +68,11 @@ public class JField implements JavadocField {
   }
 
   @Override
+  public boolean isStatic() {
+    return parser.parseIsStatic();
+  }
+
+  @Override
   public String toString() {
     return "JField{" + fullyQualifiedName + '}';
   }

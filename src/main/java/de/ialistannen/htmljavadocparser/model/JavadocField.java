@@ -12,4 +12,11 @@ public interface JavadocField extends Nameable, Overridable, Ownable {
    * @return the field declaration
    */
   String getDeclaration();
+
+  /**
+   * Returns whether this field is static.
+   *
+   * @return true if this field is static.
+   */
+  boolean isStatic();
 }
