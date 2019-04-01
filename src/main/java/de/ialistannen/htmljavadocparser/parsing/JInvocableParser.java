@@ -16,6 +16,7 @@ import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -109,7 +110,7 @@ public class JInvocableParser {
       String type = parts[0];
       String name = parts[1];
 
-      Element linkElement = codeSummary.getElementsMatchingText(removeArraySyntax(type)).last();
+      Element linkElement = codeSummary.getElementsMatchingText(Pattern.quote(type)).last();
       if (linkElement != null && linkElement.tagName().equals("a")) {
         type = linkToFqn(linkElement.attr("href"));
       }
@@ -187,10 +188,5 @@ public class JInvocableParser {
 
   public boolean parseIsStatic() {
     return ParserHelper.parseIsStatic(parseDeclaration());
-  }
-
-  private String removeArraySyntax(String string) {
-    return string.replace("...", "")
-        .replace("[]", "");
   }
 }

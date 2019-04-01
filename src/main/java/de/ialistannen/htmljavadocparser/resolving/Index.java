@@ -4,6 +4,7 @@ package de.ialistannen.htmljavadocparser.resolving;
 import static java.util.stream.Collectors.toList;
 
 import de.ialistannen.htmljavadocparser.model.JavadocPackage;
+import de.ialistannen.htmljavadocparser.model.types.ArrayType;
 import de.ialistannen.htmljavadocparser.model.types.PrimitiveType;
 import de.ialistannen.htmljavadocparser.model.types.Type;
 import java.util.Arrays;
@@ -61,8 +62,19 @@ public class Index {
    * @return the found type
    */
   public Optional<Type> getTypeForFullName(String fullyQualifiedName) {
-    String arrayRemoved = fullyQualifiedName.replace("...", "").replace("[]", "");
-    return Optional.ofNullable(this.types.get(arrayRemoved));
+    Type type = this.types.get(fullyQualifiedName);
+    if (type == null) {
+      String wrappedName = removeArraySyntax(fullyQualifiedName);
+      Type wrapped = this.types.get(wrappedName);
+
+      if (wrapped == null) {
+        return Optional.empty();
+      }
+
+      System.out.println("Returned array!");
+      return Optional.of(new ArrayType(wrapped));
+    }
+    return Optional.of(type);
   }
 
   /**
@@ -120,5 +132,10 @@ public class Index {
     return getPackage(name).orElseThrow(
         () -> new NoSuchElementException("Could not find package " + name)
     );
+  }
+
+  private String removeArraySyntax(String name) {
+    return name.replace("[]", "")
+        .replace("...", "");
   }
 }
