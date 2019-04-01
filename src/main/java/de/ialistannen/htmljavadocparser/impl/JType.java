@@ -141,8 +141,6 @@ public class JType implements Type {
     index.addPackages(summaryParser.getPackages());
 
     Type type = index.getTypeForFullNameOrError("java.lang.String");
-    printTypeInfo(type);
-
     printClassInfo((JavadocClass) type);
 
     System.out.println();
@@ -174,6 +172,7 @@ public class JType implements Type {
   }
 
   private static void printClassInfo(JavadocClass javadocClass) {
+    printTypeInfo(javadocClass);
     System.out.println("Fields:           : " + javadocClass.getFields());
     System.out.println("Constructors:     : " + javadocClass.getConstructors());
     System.out.println("Generic types:    : " + javadocClass.getGenericTypes());
