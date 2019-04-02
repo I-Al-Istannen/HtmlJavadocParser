@@ -4,7 +4,7 @@ import de.ialistannen.htmljavadocparser.model.types.JavadocAnnotation;
 import java.util.List;
 
 /**
- * THe target of an annotation.
+ * The target of annotations.
  */
 public interface AnnotationTarget {
 

@@ -10,6 +10,9 @@ import java.util.Collections;
 import java.util.List;
 import org.jsoup.nodes.Element;
 
+/**
+ * A parser for annotations.
+ */
 public class JAnnotationParser extends JTypeParser {
 
   public JAnnotationParser(String url, DocumentResolver resolver) {
@@ -28,6 +31,9 @@ public class JAnnotationParser extends JTypeParser {
 
   @Override
   public List<Invocable> parseMethods(Index index) {
+    // methods in annotations are identified by different keys and have a slightly different
+    // structure
+
     Element anchor = document().getElementById("annotation.type.required.element.summary");
 
     if (anchor == null) {

@@ -7,12 +7,21 @@ import java.nio.file.Path;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-public class LocalFileResolver implements DocumentResolver {
+/**
+ * A resolver that serves files from jar/file resources via {@link Class#getResource(String)}.
+ */
+public class ResourcesResolver implements DocumentResolver {
 
   private String baseUrl;
   private String basePath;
 
-  public LocalFileResolver(String baseUrl, String basePath) {
+  /**
+   * Creates a new resources resolver.
+   *
+   * @param baseUrl the base url all urls are relative to
+   * @param basePath the base resources path
+   */
+  public ResourcesResolver(String baseUrl, String basePath) {
     this.baseUrl = baseUrl;
     this.basePath = basePath;
   }

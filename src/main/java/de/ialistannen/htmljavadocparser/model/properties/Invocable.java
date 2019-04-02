@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * A method or constructor.
+ * An object you can invoke (e.g. methods or constructors).
  */
 public interface Invocable extends Nameable, Overridable, Deprecatable, Ownable, AnnotationTarget,
     HasVisibility, GenericTarget {

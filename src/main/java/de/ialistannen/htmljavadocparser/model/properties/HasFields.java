@@ -4,7 +4,7 @@ import de.ialistannen.htmljavadocparser.model.JavadocField;
 import java.util.List;
 
 /**
- * Marks an element as having fields.
+ * An object that may have fields.
  */
 public interface HasFields {
 

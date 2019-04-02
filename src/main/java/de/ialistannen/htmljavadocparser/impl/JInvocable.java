@@ -18,6 +18,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * An implementation of a javadoc invocable.
+ */
 public class JInvocable implements Invocable {
 
   private Index index;

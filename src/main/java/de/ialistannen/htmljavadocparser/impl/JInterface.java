@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * A javadoc interface.
+ * An implementation of a javadoc interface.
  */
 public class JInterface extends JClass implements JavadocInterface {
 
@@ -18,6 +18,7 @@ public class JInterface extends JClass implements JavadocInterface {
 
   @Override
   public List<Invocable> getConstructors() {
+    // you can not instantiate interfaces or mandate constructors for them
     return Collections.emptyList();
   }
 

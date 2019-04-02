@@ -10,11 +10,21 @@ public class HtmlTag extends JavadocComment {
 
   private Element html;
 
+  /**
+   * Creates a new html tag.
+   *
+   * @param html the html element
+   */
   public HtmlTag(Element html) {
     super(Collections.emptyList());
     this.html = html;
   }
 
+  /**
+   * Returns the html element.
+   *
+   * @return the html element
+   */
   public Element getHtml() {
     return html;
   }

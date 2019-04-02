@@ -9,6 +9,9 @@ import java.util.stream.Collectors;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+/**
+ * A parser for javadoc packages.
+ */
 public class JPackageParser {
 
   private DocumentResolver resolver;
@@ -34,7 +37,7 @@ public class JPackageParser {
     return StringUtils.normalizeWhitespace(name).trim();
   }
 
-  public Collection<String> parseTypes() {
+  public Collection<String> parseContainedTypes() {
     return document().getElementsByClass("typeSummary").stream()
         .map(element -> element
             .getElementsByAttributeValueEnding("title", "in " + parseQualifiedName())

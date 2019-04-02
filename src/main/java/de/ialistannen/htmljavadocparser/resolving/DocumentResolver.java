@@ -4,7 +4,7 @@ import de.ialistannen.htmljavadocparser.exception.ResolveException;
 import org.jsoup.nodes.Document;
 
 /**
- * Resolves an url to a document.
+ * Resolves a url to a document.
  */
 public interface DocumentResolver {
 

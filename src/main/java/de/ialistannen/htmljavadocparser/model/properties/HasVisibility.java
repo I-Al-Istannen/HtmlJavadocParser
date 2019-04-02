@@ -1,7 +1,7 @@
 package de.ialistannen.htmljavadocparser.model.properties;
 
 /**
- * Marks the element as having a visibility.
+ * An object that has a visibility or access restriction.
  */
 public interface HasVisibility {
 

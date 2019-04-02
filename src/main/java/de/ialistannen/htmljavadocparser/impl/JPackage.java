@@ -11,6 +11,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * An implementation of a javadoc package.
+ */
 public class JPackage implements JavadocPackage {
 
   private JPackageParser parser;
@@ -25,7 +28,7 @@ public class JPackage implements JavadocPackage {
 
   @Override
   public List<Type> getContainedTypes() {
-    return parser.parseTypes().stream()
+    return parser.parseContainedTypes().stream()
         .map(index::getTypeForFullNameOrError)
         .collect(Collectors.toList());
   }

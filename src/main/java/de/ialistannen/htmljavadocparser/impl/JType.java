@@ -17,7 +17,7 @@ import de.ialistannen.htmljavadocparser.parsing.doc.JavadocCommentParser;
 import de.ialistannen.htmljavadocparser.resolving.DocumentResolver;
 import de.ialistannen.htmljavadocparser.resolving.HtmlSummaryParser;
 import de.ialistannen.htmljavadocparser.resolving.Index;
-import de.ialistannen.htmljavadocparser.resolving.LocalFileResolver;
+import de.ialistannen.htmljavadocparser.resolving.ResourcesResolver;
 import java.util.List;
 import java.util.Optional;
 
@@ -122,7 +122,7 @@ public class JType implements Type {
 
   public static void main(String[] args) {
     String baseUrl = "https://docs.oracle.com/javase/10/docs/api/";
-    DocumentResolver documentResolver = new LocalFileResolver(
+    DocumentResolver documentResolver = new ResourcesResolver(
         baseUrl, "/testfiles"
     );
     Index index = new Index();

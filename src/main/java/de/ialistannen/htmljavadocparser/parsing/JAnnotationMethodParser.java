@@ -2,6 +2,9 @@ package de.ialistannen.htmljavadocparser.parsing;
 
 import de.ialistannen.htmljavadocparser.resolving.DocumentResolver;
 
+/**
+ * A parser for annotation methods.
+ */
 public class JAnnotationMethodParser extends JInvocableParser {
 
   public JAnnotationMethodParser(String url, DocumentResolver resolver) {

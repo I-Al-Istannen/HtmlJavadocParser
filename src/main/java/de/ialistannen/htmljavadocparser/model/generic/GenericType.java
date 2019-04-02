@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * A generic type variable.
+ * A generic type like {@code <E> extends Enum<E>}.
  */
 public class GenericType {
 

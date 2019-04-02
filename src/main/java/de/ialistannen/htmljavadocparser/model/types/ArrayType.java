@@ -15,6 +15,11 @@ public class ArrayType implements Type {
 
   private Type componentType;
 
+  /**
+   * Creates a new array type.
+   *
+   * @param componentType the underlying type
+   */
   public ArrayType(Type componentType) {
     this.componentType = componentType;
   }

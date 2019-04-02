@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.jsoup.nodes.Element;
 
+/**
+ * A parser for javadoc interfaces.
+ */
 public class JInterfaceParser extends JClassParser {
 
   public JInterfaceParser(String url, DocumentResolver resolver) {
@@ -16,6 +19,8 @@ public class JInterfaceParser extends JClassParser {
 
   @Override
   public List<String> parseSuperInterfaces() {
+    // The text for interfaces is different as interfaces *extend* other interfaces
+
     Element dd = document().getElementsContainingOwnText("All Superinterfaces:")
         .first();
 

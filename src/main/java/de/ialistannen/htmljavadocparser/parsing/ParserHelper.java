@@ -17,7 +17,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.jsoup.nodes.Element;
 
+/**
+ * A utility class containing parser utility methods.
+ */
 final class ParserHelper {
+
+  private ParserHelper() {
+    throw new UnsupportedOperationException();
+  }
 
   /**
    * Extracts the visibility from the declaration.
@@ -96,7 +103,7 @@ final class ParserHelper {
    * @param fqn the fully qualified name of the object the type is in
    * @return the parsed generic types
    */
-  public static List<GenericType> parseGenericTypes(Index index, Element root, String input,
+  static List<GenericType> parseGenericTypes(Index index, Element root, String input,
       String simpleName, String fqn) {
     String typeName = StringUtils.normalizeWhitespace(input);
 

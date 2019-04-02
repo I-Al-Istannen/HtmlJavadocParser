@@ -9,6 +9,9 @@ import de.ialistannen.htmljavadocparser.resolving.Index;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * An implementation of a javadoc class.
+ */
 public class JClass extends JType implements JavadocClass {
 
   private JClassParser parser;

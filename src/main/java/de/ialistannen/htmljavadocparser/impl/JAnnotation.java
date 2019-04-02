@@ -14,6 +14,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * An implementation of an annotation.
+ */
 public class JAnnotation implements JavadocAnnotation {
 
   private String fullyQualifiedName;
@@ -33,11 +36,13 @@ public class JAnnotation implements JavadocAnnotation {
 
   @Override
   public Optional<Type> getSuperClass() {
+    // There is no extension mechanism for annotations
     return Optional.empty();
   }
 
   @Override
   public List<JavadocInterface> getSuperInterfaces() {
+    // There is no extension mechanism for annotations
     return Collections.emptyList();
   }
 

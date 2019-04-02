@@ -6,6 +6,9 @@ import de.ialistannen.htmljavadocparser.model.properties.Overridable;
 import de.ialistannen.htmljavadocparser.model.properties.Ownable;
 import de.ialistannen.htmljavadocparser.model.types.Type;
 
+/**
+ * A javadoc field.
+ */
 public interface JavadocField extends Nameable, Overridable, Ownable, HasVisibility {
 
   /**

@@ -1,7 +1,7 @@
 package de.ialistannen.htmljavadocparser.model.properties;
 
 /**
- * A deprecatable object.
+ * An object that can be deprecated.
  */
 public interface Deprecatable {
 
@@ -27,6 +27,6 @@ public interface Deprecatable {
   enum DeprecationStatus {
     NOT_DEPRECATED,
     DEPRECATED,
-    DEPRECTATED_FOR_REMOVAL
+    DEPRECATED_FOR_REMOVAL
   }
 }

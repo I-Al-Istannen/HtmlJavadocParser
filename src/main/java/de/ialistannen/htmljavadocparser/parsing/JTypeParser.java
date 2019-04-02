@@ -22,6 +22,9 @@ import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 import org.jsoup.select.NodeVisitor;
 
+/**
+ * A base parser for classes, interfaces and annotations.
+ */
 public class JTypeParser {
 
   private final String url;
@@ -32,10 +35,20 @@ public class JTypeParser {
     this.resolver = resolver;
   }
 
+  /**
+   * Returns the document this parser is for.
+   *
+   * @return the document
+   */
   protected Document document() {
     return resolver.resolve(url);
   }
 
+  /**
+   * Returns this parser's document resolver.
+   *
+   * @return this parser's document resolver.
+   */
   protected DocumentResolver resolver() {
     return resolver;
   }
@@ -147,6 +160,13 @@ public class JTypeParser {
     return methods;
   }
 
+  /**
+   * Creates an Invocable instances based on the given link to it.
+   *
+   * @param link the link to the invocable. sth like {@code https://baseurl/class#invocable(params)}
+   * @param index the index to use to resolve types
+   * @return the created invocable
+   */
   protected Invocable invocableFromLink(Element link, Index index) {
     JInvocableParser parser = new JInvocableParser(link.absUrl("href"), resolver());
     String decodedLink = URLDecoder.decode(link.attr("href"), StandardCharsets.UTF_8);

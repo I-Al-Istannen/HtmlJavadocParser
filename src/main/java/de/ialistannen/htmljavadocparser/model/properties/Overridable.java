@@ -3,7 +3,7 @@ package de.ialistannen.htmljavadocparser.model.properties;
 import java.util.Collection;
 
 /**
- * An object that can be overridden.
+ * An object that can be overridden (e.g. a method or class).
  */
 public interface Overridable {
 

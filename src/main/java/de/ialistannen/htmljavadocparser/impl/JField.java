@@ -11,6 +11,9 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * An implementation of a javadoc field.
+ */
 public class JField implements JavadocField {
 
   private String fullyQualifiedName;

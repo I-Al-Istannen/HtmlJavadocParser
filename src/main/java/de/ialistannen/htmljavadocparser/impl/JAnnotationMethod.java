@@ -15,6 +15,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * An implementation of a method in an annotation.
+ */
 public class JAnnotationMethod implements Invocable {
 
   private String fullyQualifiedName;
@@ -34,6 +37,7 @@ public class JAnnotationMethod implements Invocable {
 
   @Override
   public List<Parameter> getParameters() {
+    // we encode that as the return type
     return Collections.emptyList();
   }
 
@@ -81,11 +85,13 @@ public class JAnnotationMethod implements Invocable {
 
   @Override
   public VisibilityLevel getVisibility() {
+    // annotations have public members
     return VisibilityLevel.PUBLIC;
   }
 
   @Override
   public Collection<ControlModifier> getOverrideControlModifier() {
+    // You can not extend annotations, so the methods might as well be final
     return List.of(ControlModifier.FINAL);
   }
 

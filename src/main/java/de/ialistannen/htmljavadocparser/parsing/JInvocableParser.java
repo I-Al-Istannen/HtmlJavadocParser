@@ -26,6 +26,9 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
+/**
+ * A parser for invocables, i.e. methods and constructors.
+ */
 public class JInvocableParser {
 
   private String url;
@@ -36,12 +39,22 @@ public class JInvocableParser {
     this.resolver = resolver;
   }
 
-  protected String url() {
-    return url;
-  }
-
+  /**
+   * Returns the document resolver used by this parser.
+   *
+   * @return the document resolver used by this parser
+   */
   protected DocumentResolver resolver() {
     return resolver;
+  }
+
+  /**
+   * Returns the url of this invocable.
+   *
+   * @return the url of this invocable
+   */
+  protected String url() {
+    return url;
   }
 
   private Element element() {

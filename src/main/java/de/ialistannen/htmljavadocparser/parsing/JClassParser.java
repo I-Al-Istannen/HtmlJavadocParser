@@ -17,6 +17,9 @@ import java.util.stream.Collectors;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+/**
+ * A parser for javadoc classes.
+ */
 public class JClassParser extends JTypeParser {
 
   public JClassParser(String url, DocumentResolver resolver) {

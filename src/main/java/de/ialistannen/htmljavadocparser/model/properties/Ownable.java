@@ -3,7 +3,7 @@ package de.ialistannen.htmljavadocparser.model.properties;
 import de.ialistannen.htmljavadocparser.model.types.Type;
 
 /**
- * An object that can be owned by another.
+ * An object that can be owned by another (e.g. a method or nested classes).
  */
 public interface Ownable {
 

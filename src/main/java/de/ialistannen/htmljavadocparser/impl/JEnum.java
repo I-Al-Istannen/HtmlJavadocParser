@@ -8,6 +8,9 @@ import de.ialistannen.htmljavadocparser.resolving.Index;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * An implementation of a javadoc enum.
+ */
 public class JEnum extends JClass implements JavadocEnum {
 
   private final JEnumParser parser;
@@ -24,6 +27,7 @@ public class JEnum extends JClass implements JavadocEnum {
 
   @Override
   public Optional<Type> getSuperClass() {
+    // All enums implicitly extend Enum
     return index.getTypeForFullName("java.lang.Enum");
   }
 
