@@ -11,10 +11,12 @@ import de.ialistannen.htmljavadocparser.parsing.JAnnotationParser;
 import de.ialistannen.htmljavadocparser.parsing.JClassParser;
 import de.ialistannen.htmljavadocparser.parsing.JEnumParser;
 import de.ialistannen.htmljavadocparser.parsing.JInterfaceParser;
+import de.ialistannen.htmljavadocparser.parsing.JPackageParser;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
@@ -27,7 +29,7 @@ public class HtmlSummaryParser {
   private final String baseUrl;
   private final Index index;
   private Collection<Type> typeCache;
-  private Collection<JavadocPackage> packageCache;
+  private Map<String, JavadocPackage> packageCache;
 
   /**
    * Creates a new HTML resolver.
@@ -47,7 +49,7 @@ public class HtmlSummaryParser {
     Element main = document.getElementsByAttributeValue("role", "main").first();
 
     typeCache = new ArrayList<>();
-    packageCache = new HashSet<>();
+    packageCache = new HashMap<>();
 
     for (Element a : main.getElementsByTag("a")) {
       String url = a.absUrl("href");
@@ -81,7 +83,12 @@ public class HtmlSummaryParser {
         throw new IllegalArgumentException("Encountered an unknown type: " + a.attr("title"));
       }
 
-      packageCache.add(new JPackage(extractPackageName(document, url)));
+      String packageName = extractPackageName(a);
+      if (!packageCache.containsKey(packageName)) {
+        String packageUrl = baseUrl + "/" + packageName.replace(".", "/") + "/package-summary.html";
+        JPackageParser parser = new JPackageParser(documentResolver, packageUrl);
+        packageCache.put(packageName, new JPackage(parser, packageName, index));
+      }
     }
   }
 
@@ -92,9 +99,8 @@ public class HtmlSummaryParser {
         .replace("/", ".");
   }
 
-  private String extractPackageName(Document document, String url) {
-    String fqn = extractFqn(document, url);
-    return fqn.substring(0, fqn.lastIndexOf("."));
+  private String extractPackageName(Element link) {
+    return link.attr("title").replaceAll(".+? in (.+)", "$1");
   }
 
   /**
@@ -116,6 +122,6 @@ public class HtmlSummaryParser {
    * @return all packages
    */
   public Collection<JavadocPackage> getPackages() {
-    return Collections.unmodifiableCollection(packageCache);
+    return Collections.unmodifiableCollection(packageCache.values());
   }
 }

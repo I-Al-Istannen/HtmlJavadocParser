@@ -8,6 +8,7 @@ import de.ialistannen.htmljavadocparser.util.StringUtils;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.stream.Collectors;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -81,6 +82,10 @@ public class JFieldParser {
     }
 
     return ParserHelper.parseReturnTypeFromMemberSummaryRow(row, parseOwner());
+  }
+
+  public List<Element> parseJavadoc() {
+    return element().select("li > div, dl");
   }
 
   private boolean isInInterface() {

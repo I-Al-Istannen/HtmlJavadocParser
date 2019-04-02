@@ -19,6 +19,7 @@ import de.ialistannen.htmljavadocparser.resolving.Index;
 import de.ialistannen.htmljavadocparser.resolving.LocalFileResolver;
 import java.util.List;
 import java.util.Optional;
+import org.jsoup.nodes.Element;
 
 /**
  * A base javadoc {@link Type}.
@@ -89,6 +90,8 @@ public class JType implements Type {
 
   @Override
   public Optional<JavadocComment> getJavadoc() {
+    List<Element> elements = jTypeParser.parseJavadocComment();
+//    System.out.println(elements);
     return Optional.empty();
   }
 
@@ -217,6 +220,10 @@ public class JType implements Type {
         ((JavadocInterface) index.getTypeForFullNameOrError("javax.swing.SwingConstants"))
             .getFields().get(0)
     );
+
+    System.out.println();
+    System.out.println();
+    printPackageInfo(index.getPackageOrError("java.util"));
   }
 
   private static void printClassInfo(JavadocClass javadocClass) {
@@ -250,6 +257,7 @@ public class JType implements Type {
     System.out.println("Original owner    : " + type.getOriginalOwner());
     System.out.println("Annotations       : " + type.getAnnotations());
     System.out.println("Methods           : " + type.getMethods());
+    System.out.println("Javadoc           : " + type.getJavadoc());
   }
 
   private static void printInvocableInfo(Invocable method) {
@@ -268,6 +276,7 @@ public class JType implements Type {
     System.out.println("Generic types     : " + method.getGenericTypes());
     System.out.println("Thrown exceptions : " + method.getThrows());
     System.out.println("Static            : " + method.isStatic());
+    System.out.println("Javadoc           : " + method.getJavadoc());
   }
 
   private static void printFieldInfo(JavadocField field) {
@@ -281,5 +290,15 @@ public class JType implements Type {
     System.out.println("Original owner    : " + field.getOriginalOwner());
     System.out.println("Override modifier : " + field.getOverrideControlModifier());
     System.out.println("Static            : " + field.isStatic());
+    System.out.println("Javadoc           : " + field.getJavadoc());
+  }
+
+  private static void printPackageInfo(JavadocPackage javadocPackage) {
+    System.out.println("Simple name       : " + javadocPackage.getSimpleName());
+    System.out.println("Fully qualified   : " + javadocPackage.getFullyQualifiedName());
+    System.out.println("Package           : " + javadocPackage.getPackage());
+    System.out.println("Contained classes : " + javadocPackage.getContainedTypes());
+    System.out.println("Javadoc           : " + javadocPackage.getJavadoc());
+
   }
 }

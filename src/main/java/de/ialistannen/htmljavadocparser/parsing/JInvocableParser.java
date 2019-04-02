@@ -217,4 +217,8 @@ public class JInvocableParser {
         parsePackage() + "." + parseSimpleName()
     );
   }
+
+  public List<Element> parseJavadoc() {
+    return element().select("li > div, dl");
+  }
 }

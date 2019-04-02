@@ -8,7 +8,7 @@ import java.util.Objects;
  * A method or constructor.
  */
 public interface Invocable extends Nameable, Overridable, Deprecatable, Ownable, AnnotationTarget,
-    GenericTarget {
+    HasVisibility, GenericTarget {
 
   String getDeclaration();
 

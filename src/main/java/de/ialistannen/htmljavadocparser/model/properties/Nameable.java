@@ -7,7 +7,7 @@ import java.util.Optional;
 /**
  * A field, method, type, constructor or other construct that can be named.
  */
-public interface Nameable extends HasVisibility {
+public interface Nameable {
 
   /**
    * Returns the simple name.
