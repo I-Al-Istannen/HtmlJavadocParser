@@ -204,7 +204,7 @@ public class JType implements Type {
     printClassInfo(listClass);
     System.out.println();
     listClass.getMethods().stream()
-        .filter(invocable -> invocable.getSimpleName().equals("get"))
+        .filter(invocable -> invocable.getSimpleName().equals("toArray"))
         .filter(invocable -> invocable.getParameters().size() == 1)
         .findFirst()
         .ifPresent(JType::printInvocableInfo);

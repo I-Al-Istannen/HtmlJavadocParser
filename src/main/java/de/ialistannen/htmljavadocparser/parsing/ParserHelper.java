@@ -75,10 +75,11 @@ final class ParserHelper {
     Element returnTypeTd = row.getElementsByClass("colFirst").first();
     Element returnTypeLink = returnTypeTd.getElementsByTag("a").first();
 
-    // no link, so it was a primitive type
+    // no link, so it was a primitive or generic type
     if (returnTypeLink == null) {
       return returnTypeTd.text()
           .replace("static", "")
+          .replaceAll("^<.+?>\\s", "")  // remove generic type declaration
           .trim();
     }
 

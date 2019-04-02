@@ -4,6 +4,7 @@ package de.ialistannen.htmljavadocparser.resolving;
 import static java.util.stream.Collectors.toList;
 
 import de.ialistannen.htmljavadocparser.model.JavadocPackage;
+import de.ialistannen.htmljavadocparser.model.generic.GenericTypeProxy;
 import de.ialistannen.htmljavadocparser.model.types.ArrayType;
 import de.ialistannen.htmljavadocparser.model.types.PrimitiveType;
 import de.ialistannen.htmljavadocparser.model.types.Type;
@@ -68,13 +69,19 @@ public class Index {
       Type wrapped = this.types.get(wrappedName);
 
       if (wrapped == null) {
-        return Optional.empty();
+        return tryGetGenericProxy(fullyQualifiedName);
       }
 
-      System.out.println("Returned array!");
       return Optional.of(new ArrayType(wrapped));
     }
     return Optional.of(type);
+  }
+
+  private Optional<Type> tryGetGenericProxy(String name) {
+    if (name.contains(".")) {
+      return Optional.empty();
+    }
+    return Optional.of(new GenericTypeProxy(name, name));
   }
 
   /**
