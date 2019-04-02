@@ -23,4 +23,9 @@ public class JavadocComment {
   public List<JavadocComment> getChildren() {
     return Collections.unmodifiableList(children);
   }
+
+  @Override
+  public String toString() {
+    return "JavadocComment{" + children + '}';
+  }
 }

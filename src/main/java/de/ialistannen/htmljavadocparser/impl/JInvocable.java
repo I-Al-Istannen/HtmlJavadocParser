@@ -7,6 +7,7 @@ import de.ialistannen.htmljavadocparser.model.properties.Invocable;
 import de.ialistannen.htmljavadocparser.model.types.JavadocAnnotation;
 import de.ialistannen.htmljavadocparser.model.types.Type;
 import de.ialistannen.htmljavadocparser.parsing.JInvocableParser;
+import de.ialistannen.htmljavadocparser.parsing.doc.JavadocCommentParser;
 import de.ialistannen.htmljavadocparser.resolving.Index;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -76,8 +77,7 @@ public class JInvocable implements Invocable {
 
   @Override
   public Optional<JavadocComment> getJavadoc() {
-//    System.out.println(parser.parseJavadoc());
-    return Optional.empty();
+    return new JavadocCommentParser().parse(parser.parseJavadoc());
   }
 
   @Override

@@ -5,6 +5,7 @@ import de.ialistannen.htmljavadocparser.model.JavadocPackage;
 import de.ialistannen.htmljavadocparser.model.doc.JavadocComment;
 import de.ialistannen.htmljavadocparser.model.types.Type;
 import de.ialistannen.htmljavadocparser.parsing.JFieldParser;
+import de.ialistannen.htmljavadocparser.parsing.doc.JavadocCommentParser;
 import de.ialistannen.htmljavadocparser.resolving.Index;
 import java.util.Collection;
 import java.util.Objects;
@@ -44,8 +45,7 @@ public class JField implements JavadocField {
 
   @Override
   public Optional<JavadocComment> getJavadoc() {
-//    System.out.println(parser.parseJavadoc());
-    return Optional.empty();
+    return new JavadocCommentParser().parse(parser.parseJavadoc());
   }
 
   @Override

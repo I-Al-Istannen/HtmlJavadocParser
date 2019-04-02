@@ -1,26 +1,31 @@
 package de.ialistannen.htmljavadocparser.model.doc;
 
-import java.util.List;
+import java.util.Collections;
 
 /**
  * A block tag like @author or @throws.
  */
 public class BlockTag extends JavadocComment {
 
-  private final String name;
-  private final String value;
+  private final HtmlTag name;
+  private final HtmlTag value;
 
-  public BlockTag(String name, String value, List<JavadocComment> children) {
-    super(children);
+  public BlockTag(HtmlTag name, HtmlTag value) {
+    super(Collections.emptyList());
     this.name = name;
     this.value = value;
   }
 
-  public String getName() {
+  public HtmlTag getName() {
     return name;
   }
 
-  public String getValue() {
+  public HtmlTag getValue() {
     return value;
+  }
+
+  @Override
+  public String toString() {
+    return "BlockTag{" + name + ": " + value + '}';
   }
 }

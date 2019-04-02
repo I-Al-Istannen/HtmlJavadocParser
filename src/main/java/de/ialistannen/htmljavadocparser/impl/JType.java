@@ -13,13 +13,13 @@ import de.ialistannen.htmljavadocparser.model.types.JavadocEnum;
 import de.ialistannen.htmljavadocparser.model.types.JavadocInterface;
 import de.ialistannen.htmljavadocparser.model.types.Type;
 import de.ialistannen.htmljavadocparser.parsing.JTypeParser;
+import de.ialistannen.htmljavadocparser.parsing.doc.JavadocCommentParser;
 import de.ialistannen.htmljavadocparser.resolving.DocumentResolver;
 import de.ialistannen.htmljavadocparser.resolving.HtmlSummaryParser;
 import de.ialistannen.htmljavadocparser.resolving.Index;
 import de.ialistannen.htmljavadocparser.resolving.LocalFileResolver;
 import java.util.List;
 import java.util.Optional;
-import org.jsoup.nodes.Element;
 
 /**
  * A base javadoc {@link Type}.
@@ -90,9 +90,7 @@ public class JType implements Type {
 
   @Override
   public Optional<JavadocComment> getJavadoc() {
-    List<Element> elements = jTypeParser.parseJavadocComment();
-//    System.out.println(elements);
-    return Optional.empty();
+    return new JavadocCommentParser().parse(jTypeParser.parseJavadocComment());
   }
 
   @Override

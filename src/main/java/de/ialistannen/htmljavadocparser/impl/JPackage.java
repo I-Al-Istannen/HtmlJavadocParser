@@ -4,6 +4,7 @@ import de.ialistannen.htmljavadocparser.model.JavadocPackage;
 import de.ialistannen.htmljavadocparser.model.doc.JavadocComment;
 import de.ialistannen.htmljavadocparser.model.types.Type;
 import de.ialistannen.htmljavadocparser.parsing.JPackageParser;
+import de.ialistannen.htmljavadocparser.parsing.doc.JavadocCommentParser;
 import de.ialistannen.htmljavadocparser.resolving.Index;
 import java.util.List;
 import java.util.Objects;
@@ -48,8 +49,7 @@ public class JPackage implements JavadocPackage {
 
   @Override
   public Optional<JavadocComment> getJavadoc() {
-//    System.out.println(parser.parseJavadoc());
-    return Optional.empty();
+    return new JavadocCommentParser().parse(parser.parseJavadoc());
   }
 
   @Override
