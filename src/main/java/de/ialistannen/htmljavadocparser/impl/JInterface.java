@@ -12,8 +12,9 @@ import java.util.List;
  */
 public class JInterface extends JClass implements JavadocInterface {
 
-  public JInterface(String fullyQualifiedName, Index index, JInterfaceParser parser) {
-    super(fullyQualifiedName, index, parser);
+  public JInterface(String fullyQualifiedName, String simpleName, Index index,
+      JInterfaceParser parser) {
+    super(fullyQualifiedName, simpleName, index, parser);
   }
 
   @Override

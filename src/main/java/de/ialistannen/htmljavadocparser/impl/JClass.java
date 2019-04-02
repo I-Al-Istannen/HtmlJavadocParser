@@ -16,8 +16,8 @@ public class JClass extends JType implements JavadocClass {
 
   private JClassParser parser;
 
-  public JClass(String fullyQualifiedName, Index index, JClassParser parser) {
-    super(fullyQualifiedName, index, parser);
+  public JClass(String fullyQualifiedName, String simpleName, Index index, JClassParser parser) {
+    super(fullyQualifiedName, simpleName, index, parser);
     this.parser = parser;
   }
 

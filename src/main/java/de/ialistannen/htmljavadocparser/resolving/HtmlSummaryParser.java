@@ -12,6 +12,7 @@ import de.ialistannen.htmljavadocparser.parsing.JClassParser;
 import de.ialistannen.htmljavadocparser.parsing.JEnumParser;
 import de.ialistannen.htmljavadocparser.parsing.JInterfaceParser;
 import de.ialistannen.htmljavadocparser.parsing.JPackageParser;
+import de.ialistannen.htmljavadocparser.util.LinkUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -56,25 +57,31 @@ public class HtmlSummaryParser {
 
       if (a.attr("title").contains("annotation in")) {
         typeCache.add(new JAnnotation(
-            extractFqn(document, url), new JAnnotationParser(url, documentResolver), index
+            extractFqn(a),
+            extractSimpleName(a),
+            new JAnnotationParser(url, documentResolver),
+            index
         ));
       } else if (a.attr("title").contains("class in")) {
         JClass jClass = new JClass(
-            extractFqn(document, url),
+            extractFqn(a),
+            extractSimpleName(a),
             index,
             new JClassParser(url, documentResolver)
         );
         typeCache.add(jClass);
       } else if (a.attr("title").contains("interface in")) {
         JInterface jInterface = new JInterface(
-            extractFqn(document, url),
+            extractFqn(a),
+            extractSimpleName(a),
             index,
             new JInterfaceParser(url, documentResolver)
         );
         typeCache.add(jInterface);
       } else if (a.attr("title").contains("enum in")) {
         JEnum jjEnum = new JEnum(
-            extractFqn(document, url),
+            extractFqn(a),
+            extractSimpleName(a),
             index,
             new JEnumParser(url, documentResolver)
         );
@@ -92,15 +99,19 @@ public class HtmlSummaryParser {
     }
   }
 
-  private String extractFqn(Document document, String url) {
-    return url
-        .replace(document.baseUri(), "")
-        .replace(".html", "")
-        .replace("/", ".");
+  private String extractFqn(Element link) {
+    return LinkUtils.linkToFqn(link.attr("href"));
   }
 
   private String extractPackageName(Element link) {
     return link.attr("title").replaceAll(".+? in (.+)", "$1");
+  }
+
+  private String extractSimpleName(Element link) {
+    String packageName = extractPackageName(link);
+    String fqn = extractFqn(link);
+
+    return fqn.replace(packageName + ".", "");
   }
 
   /**

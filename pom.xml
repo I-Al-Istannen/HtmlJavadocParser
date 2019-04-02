@@ -24,6 +24,7 @@
 
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.0.1</version>
         <executions>
           <execution>
             <id>generate-docs</id>
@@ -33,9 +34,13 @@
             <phase>package</phase>
           </execution>
         </executions>
+        <configuration>
+          <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
+        <version>3.0.1</version>
         <executions>
           <execution>
             <id>generate-sources</id>

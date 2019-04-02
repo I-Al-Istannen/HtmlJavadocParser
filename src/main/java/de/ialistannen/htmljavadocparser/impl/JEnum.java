@@ -15,8 +15,8 @@ public class JEnum extends JClass implements JavadocEnum {
 
   private final JEnumParser parser;
 
-  public JEnum(String fullyQualifiedName, Index index, JEnumParser parser) {
-    super(fullyQualifiedName, index, parser);
+  public JEnum(String fullyQualifiedName, String simpleName, Index index, JEnumParser parser) {
+    super(fullyQualifiedName, simpleName, index, parser);
     this.parser = parser;
   }
 

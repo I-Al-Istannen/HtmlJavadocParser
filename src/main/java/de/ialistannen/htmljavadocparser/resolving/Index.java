@@ -115,7 +115,7 @@ public class Index {
    * @param name the name
    * @return all matching types
    */
-  public List<Type> findWithName(String name) {
+  public List<Type> findWithSimpleName(String name) {
     return findMatching(type -> type.getSimpleName().equals(name));
   }
 

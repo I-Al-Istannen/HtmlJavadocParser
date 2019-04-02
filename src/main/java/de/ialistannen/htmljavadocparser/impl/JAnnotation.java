@@ -20,11 +20,14 @@ import java.util.stream.Collectors;
 public class JAnnotation implements JavadocAnnotation {
 
   private String fullyQualifiedName;
+  private String simpleName;
   private JAnnotationParser parser;
   private Index index;
 
-  public JAnnotation(String fullyQualifiedName, JAnnotationParser parser, Index index) {
+  public JAnnotation(String fullyQualifiedName, String simpleName, JAnnotationParser parser,
+      Index index) {
     this.fullyQualifiedName = fullyQualifiedName;
+    this.simpleName = simpleName;
     this.parser = parser;
     this.index = index;
   }
@@ -66,7 +69,7 @@ public class JAnnotation implements JavadocAnnotation {
 
   @Override
   public String getSimpleName() {
-    return parser.parseSimpleName();
+    return simpleName;
   }
 
   @Override

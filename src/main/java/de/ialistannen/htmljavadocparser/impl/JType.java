@@ -27,11 +27,13 @@ import java.util.Optional;
 public class JType implements Type {
 
   private final String fullyQualifiedName;
+  private final String simpleName;
   protected final Index index;
   private JTypeParser jTypeParser;
 
-  public JType(String fullyQualifiedName, Index index, JTypeParser jTypeParser) {
+  public JType(String fullyQualifiedName, String simpleName, Index index, JTypeParser jTypeParser) {
     this.fullyQualifiedName = fullyQualifiedName;
+    this.simpleName = simpleName;
     this.index = index;
     this.jTypeParser = jTypeParser;
   }
@@ -75,7 +77,7 @@ public class JType implements Type {
 
   @Override
   public String getSimpleName() {
-    return jTypeParser.parseSimpleName();
+    return simpleName;
   }
 
   @Override
