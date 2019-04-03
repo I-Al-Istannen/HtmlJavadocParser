@@ -15,6 +15,24 @@ public interface Overridable {
   Collection<ControlModifier> getOverrideControlModifier();
 
   /**
+   * Returns true if the element is final.
+   *
+   * @return true if the element is final
+   */
+  default boolean isFinal() {
+    return getOverrideControlModifier().contains(ControlModifier.FINAL);
+  }
+
+  /**
+   * Returns true if the element is abstract.
+   *
+   * @return true if the element is abstract
+   */
+  default boolean isAbstract() {
+    return getOverrideControlModifier().contains(ControlModifier.ABSTRACT);
+  }
+
+  /**
    * The different modifiers that control whether the object can be override.
    */
   enum ControlModifier {
