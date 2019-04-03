@@ -120,12 +120,12 @@ public class JInvocableParser {
       String type = parts[0].replaceAll("<.+", ""); // remove generics
       String name = parts[1].replaceAll("<.+", ""); // remove generics
 
-      Element linkElement = codeSummary.getElementsMatchingText(Pattern.quote(type)).last();
+      Element linkElement = codeSummary.getElementsMatchingText("\\b" + Pattern.quote(type) + "\\b")
+          .last();
 
       if (linkElement != null && linkElement.tagName().equals("a")) {
         type = linkToFqn(linkElement.attr("href"));
       }
-
       map.put(name, type);
     }
 
