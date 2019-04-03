@@ -5,9 +5,9 @@ import de.ialistannen.htmljavadocparser.model.doc.JavadocComment;
 import java.util.Optional;
 
 /**
- * A field, method, type, constructor or other construct that can be named.
+ * The base for all javadoc elements.
  */
-public interface Nameable {
+public interface JavadocElement {
 
   /**
    * Returns the simple name.
@@ -36,4 +36,18 @@ public interface Nameable {
    * @return the javadoc for this type
    */
   Optional<JavadocComment> getJavadoc();
+
+  /**
+   * Returns the field declaration.
+   *
+   * @return the field declaration
+   */
+  String getDeclaration();
+
+  /**
+   * Returns the url to this element.
+   *
+   * @return the url to this element
+   */
+  String getUrl();
 }

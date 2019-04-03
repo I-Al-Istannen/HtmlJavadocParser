@@ -92,6 +92,11 @@ public enum PrimitiveType implements Type {
   }
 
   @Override
+  public String getUrl() {
+    return "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html";
+  }
+
+  @Override
   public String toString() {
     return name;
   }

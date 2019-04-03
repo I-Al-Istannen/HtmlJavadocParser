@@ -95,4 +95,8 @@ public class JFieldParser {
     return element().ownerDocument().getElementsByClass("title").first()
         .ownText().startsWith("Interface");
   }
+
+  public String parseUrl() {
+    return url;
+  }
 }

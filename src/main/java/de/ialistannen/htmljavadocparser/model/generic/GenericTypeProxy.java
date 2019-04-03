@@ -90,6 +90,11 @@ public class GenericTypeProxy implements Type {
   }
 
   @Override
+  public String getUrl() {
+    return "https://duckduckgo.com/?q=not+implemented+fully+%3A(";
+  }
+
+  @Override
   public String toString() {
     return name;
   }

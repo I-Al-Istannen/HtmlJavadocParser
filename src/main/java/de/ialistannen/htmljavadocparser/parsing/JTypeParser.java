@@ -207,4 +207,8 @@ public class JTypeParser {
                 + ".description > ul:nth-child(1) > li:nth-child(1) > dl:last-child"
         );
   }
+
+  public String parseUrl() {
+    return url;
+  }
 }

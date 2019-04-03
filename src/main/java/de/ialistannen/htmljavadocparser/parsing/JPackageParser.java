@@ -46,4 +46,8 @@ public class JPackageParser {
         .map(element -> LinkUtils.linkToFqn(element.attr("href")))
         .collect(Collectors.toSet());
   }
+
+  public String parseUrl() {
+    return url;
+  }
 }

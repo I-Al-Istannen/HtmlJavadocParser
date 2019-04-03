@@ -1,5 +1,6 @@
 package de.ialistannen.htmljavadocparser;
 
+import de.ialistannen.htmljavadocparser.model.types.JavadocClass;
 import de.ialistannen.htmljavadocparser.resolving.DocumentResolver;
 import de.ialistannen.htmljavadocparser.resolving.HtmlSummaryParser;
 import de.ialistannen.htmljavadocparser.resolving.Index;
@@ -52,7 +53,11 @@ public class JavadocApi {
 
     JavadocApi javadocApi = new JavadocApi(baseUrl, documentResolver);
 
-    javadocApi.getIndex().getPackageOrError("java.util").getJavadoc()
-        .ifPresent(System.out::println);
+    JavadocClass string = (JavadocClass) javadocApi.getIndex()
+        .getTypeForFullNameOrError("java.util.Map");
+    string.getMethods().stream()
+        .filter(m -> m.getSimpleName().equals("ofEntries"))
+        .findFirst()
+        .ifPresent(invocable -> System.out.println(invocable.getReturnType()));
   }
 }

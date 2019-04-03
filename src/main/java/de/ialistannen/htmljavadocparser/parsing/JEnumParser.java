@@ -1,7 +1,7 @@
 package de.ialistannen.htmljavadocparser.parsing;
 
 import de.ialistannen.htmljavadocparser.impl.JField;
-import de.ialistannen.htmljavadocparser.model.properties.Nameable;
+import de.ialistannen.htmljavadocparser.model.properties.JavadocElement;
 import de.ialistannen.htmljavadocparser.resolving.DocumentResolver;
 import de.ialistannen.htmljavadocparser.resolving.Index;
 import de.ialistannen.htmljavadocparser.util.LinkUtils;
@@ -18,8 +18,8 @@ public class JEnumParser extends JClassParser {
     super(url, resolver);
   }
 
-  public List<Nameable> parseEnumConstants(Index index) {
-    List<Nameable> fields = new ArrayList<>();
+  public List<JavadocElement> parseEnumConstants(Index index) {
+    List<JavadocElement> fields = new ArrayList<>();
 
     Element table = document().getElementById("enum.constant.summary").parent();
     for (Element wrapping : table.getElementsByClass("memberNameLink")) {

@@ -116,6 +116,11 @@ public class JAnnotationMethod implements Invocable {
   }
 
   @Override
+  public String getUrl() {
+    return parser.parseUrl();
+  }
+
+  @Override
   public String toString() {
     return "JAnnotationMethod{" + fullyQualifiedName + '}';
   }

@@ -100,6 +100,11 @@ public class ArrayType implements Type {
   }
 
   @Override
+  public String getUrl() {
+    return componentType.getUrl();
+  }
+
+  @Override
   public String toString() {
     return "ArrayType{" + componentType + '}';
   }

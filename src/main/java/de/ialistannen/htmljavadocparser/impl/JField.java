@@ -82,6 +82,11 @@ public class JField implements JavadocField {
   }
 
   @Override
+  public String getUrl() {
+    return parser.parseUrl();
+  }
+
+  @Override
   public String toString() {
     return "JField{" + fullyQualifiedName + '}';
   }

@@ -110,6 +110,11 @@ public class JAnnotation implements JavadocAnnotation {
   }
 
   @Override
+  public String getUrl() {
+    return parser.parseUrl();
+  }
+
+  @Override
   public String toString() {
     return "JAnnotation{" + fullyQualifiedName + '}';
   }

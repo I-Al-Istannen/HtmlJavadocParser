@@ -56,6 +56,16 @@ public class JPackage implements JavadocPackage {
   }
 
   @Override
+  public String getDeclaration() {
+    return "package " + getSimpleName();
+  }
+
+  @Override
+  public String getUrl() {
+    return parser.parseUrl();
+  }
+
+  @Override
   public String toString() {
     return "JPackage{" + fullyQualifiedName + '}';
   }

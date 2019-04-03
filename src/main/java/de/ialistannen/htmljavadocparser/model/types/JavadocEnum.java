@@ -1,7 +1,7 @@
 package de.ialistannen.htmljavadocparser.model.types;
 
 import de.ialistannen.htmljavadocparser.model.properties.GenericTarget;
-import de.ialistannen.htmljavadocparser.model.properties.Nameable;
+import de.ialistannen.htmljavadocparser.model.properties.JavadocElement;
 import java.util.List;
 
 /**
@@ -14,5 +14,5 @@ public interface JavadocEnum extends Type, GenericTarget {
    *
    * @return the enum constants
    */
-  List<Nameable> getConstants();
+  List<JavadocElement> getConstants();
 }

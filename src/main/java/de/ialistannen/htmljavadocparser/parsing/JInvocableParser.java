@@ -234,4 +234,8 @@ public class JInvocableParser {
   public List<Element> parseJavadoc() {
     return element().select("li > div, li > dl");
   }
+
+  public String parseUrl() {
+    return url;
+  }
 }

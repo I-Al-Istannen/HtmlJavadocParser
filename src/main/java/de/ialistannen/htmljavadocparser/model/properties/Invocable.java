@@ -7,7 +7,8 @@ import java.util.Objects;
 /**
  * An object you can invoke (e.g. methods or constructors).
  */
-public interface Invocable extends Nameable, Overridable, Deprecatable, Ownable, AnnotationTarget,
+public interface Invocable extends JavadocElement, Overridable, Deprecatable, Ownable,
+    AnnotationTarget,
     HasVisibility, GenericTarget {
 
   String getDeclaration();

@@ -133,6 +133,11 @@ public class JInvocable implements Invocable {
   }
 
   @Override
+  public String getUrl() {
+    return parser.parseUrl();
+  }
+
+  @Override
   public String toString() {
     return "JInvocable{" + fullyQualifiedName + '}';
   }

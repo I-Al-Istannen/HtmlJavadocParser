@@ -6,7 +6,7 @@ import de.ialistannen.htmljavadocparser.model.JavadocField;
 import de.ialistannen.htmljavadocparser.model.JavadocPackage;
 import de.ialistannen.htmljavadocparser.model.doc.JavadocComment;
 import de.ialistannen.htmljavadocparser.model.properties.Invocable;
-import de.ialistannen.htmljavadocparser.model.properties.Nameable;
+import de.ialistannen.htmljavadocparser.model.properties.JavadocElement;
 import de.ialistannen.htmljavadocparser.model.types.JavadocAnnotation;
 import de.ialistannen.htmljavadocparser.model.types.JavadocClass;
 import de.ialistannen.htmljavadocparser.model.types.JavadocEnum;
@@ -118,6 +118,11 @@ public class JType implements Type {
   }
 
   @Override
+  public String getUrl() {
+    return jTypeParser.parseUrl();
+  }
+
+  @Override
   public String toString() {
     return "JType{" + getFullyQualifiedName() + '}';
   }
@@ -224,6 +229,10 @@ public class JType implements Type {
     System.out.println();
     System.out.println();
     printPackageInfo(index.getPackageOrError("java.util"));
+
+    System.out.println();
+    System.out.println();
+    printClassInfo((JavadocClass) index.getTypeForFullNameOrError("java.util.HashMap"));
   }
 
   private static void printClassInfo(JavadocClass javadocClass) {
@@ -238,7 +247,7 @@ public class JType implements Type {
   private static void printEnumInfo(JavadocEnum javadocEnum) {
     printTypeInfo(javadocEnum);
     System.out.println("Constants         : " + javadocEnum.getConstants());
-    for (Nameable constant : javadocEnum.getConstants()) {
+    for (JavadocElement constant : javadocEnum.getConstants()) {
       System.out.println();
       printFieldInfo((JavadocField) constant);
     }
@@ -257,6 +266,7 @@ public class JType implements Type {
     System.out.println("Original owner    : " + type.getOriginalOwner());
     System.out.println("Annotations       : " + type.getAnnotations());
     System.out.println("Methods           : " + type.getMethods());
+    System.out.println("URL               : " + type.getUrl());
     System.out.println("Javadoc           : " + type.getJavadoc());
   }
 
@@ -276,6 +286,7 @@ public class JType implements Type {
     System.out.println("Generic types     : " + method.getGenericTypes());
     System.out.println("Thrown exceptions : " + method.getThrows());
     System.out.println("Static            : " + method.isStatic());
+    System.out.println("URL               : " + method.getUrl());
     System.out.println("Javadoc           : " + method.getJavadoc());
   }
 
@@ -290,6 +301,7 @@ public class JType implements Type {
     System.out.println("Original owner    : " + field.getOriginalOwner());
     System.out.println("Override modifier : " + field.getOverrideControlModifier());
     System.out.println("Static            : " + field.isStatic());
+    System.out.println("URL               : " + field.getUrl());
     System.out.println("Javadoc           : " + field.getJavadoc());
   }
 
@@ -298,6 +310,7 @@ public class JType implements Type {
     System.out.println("Fully qualified   : " + javadocPackage.getFullyQualifiedName());
     System.out.println("Package           : " + javadocPackage.getPackage());
     System.out.println("Contained classes : " + javadocPackage.getContainedTypes());
+    System.out.println("URL               : " + javadocPackage.getUrl());
     System.out.println("Javadoc           : " + javadocPackage.getJavadoc());
 
   }

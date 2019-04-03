@@ -4,7 +4,7 @@ import de.ialistannen.htmljavadocparser.model.properties.AnnotationTarget;
 import de.ialistannen.htmljavadocparser.model.properties.Deprecatable;
 import de.ialistannen.htmljavadocparser.model.properties.HasVisibility;
 import de.ialistannen.htmljavadocparser.model.properties.Invocable;
-import de.ialistannen.htmljavadocparser.model.properties.Nameable;
+import de.ialistannen.htmljavadocparser.model.properties.JavadocElement;
 import de.ialistannen.htmljavadocparser.model.properties.Ownable;
 import java.util.List;
 import java.util.Optional;
@@ -12,14 +12,8 @@ import java.util.Optional;
 /**
  * A java type.
  */
-public interface Type extends Nameable, AnnotationTarget, Deprecatable, Ownable, HasVisibility {
-
-  /**
-   * Returns the type declaration.
-   *
-   * @return the type declaration
-   */
-  String getDeclaration();
+public interface Type extends JavadocElement, AnnotationTarget, Deprecatable, Ownable,
+    HasVisibility {
 
   /**
    * Returns the superclass.

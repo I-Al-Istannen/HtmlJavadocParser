@@ -1,6 +1,6 @@
 package de.ialistannen.htmljavadocparser.impl;
 
-import de.ialistannen.htmljavadocparser.model.properties.Nameable;
+import de.ialistannen.htmljavadocparser.model.properties.JavadocElement;
 import de.ialistannen.htmljavadocparser.model.types.JavadocEnum;
 import de.ialistannen.htmljavadocparser.model.types.Type;
 import de.ialistannen.htmljavadocparser.parsing.JEnumParser;
@@ -21,7 +21,7 @@ public class JEnum extends JClass implements JavadocEnum {
   }
 
   @Override
-  public List<Nameable> getConstants() {
+  public List<JavadocElement> getConstants() {
     return parser.parseEnumConstants(index);
   }
 
