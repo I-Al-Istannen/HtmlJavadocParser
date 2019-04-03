@@ -30,6 +30,11 @@ public class HtmlTag extends JavadocComment {
   }
 
   @Override
+  public void acceot(JavadocCommentVisitor visitor) {
+    visitor.visitHtmlTag(this);
+  }
+
+  @Override
   public String toString() {
     String htmlString = html.text();
     String trimmed = htmlString.substring(0, Math.min(htmlString.length(), 200));

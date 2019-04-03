@@ -24,6 +24,15 @@ public class JavadocComment {
     return Collections.unmodifiableList(children);
   }
 
+  /**
+   * Accepts the given visitor.
+   *
+   * @param visitor the visitor
+   */
+  public void acceot(JavadocCommentVisitor visitor) {
+    children.forEach(comment -> comment.acceot(visitor));
+  }
+
   @Override
   public String toString() {
     return "JavadocComment{" + children + '}';

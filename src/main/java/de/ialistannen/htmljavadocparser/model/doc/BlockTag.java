@@ -41,6 +41,11 @@ public class BlockTag extends JavadocComment {
   }
 
   @Override
+  public void acceot(JavadocCommentVisitor visitor) {
+    visitor.visitBlockTag(this);
+  }
+
+  @Override
   public String toString() {
     return "BlockTag{" + name + ": " + value + '}';
   }
