@@ -63,6 +63,17 @@ public class Index {
    * @return the found type
    */
   public Optional<Type> getTypeForFullName(String fullyQualifiedName) {
+    return getTypeForFullNameImpl(fullyQualifiedName)
+        .or(() -> getTypeForFullNameImpl("java.lang." + fullyQualifiedName));
+  }
+
+  /**
+   * Finds a name by its fully qualified name.
+   *
+   * @param fullyQualifiedName the fully qualified type name
+   * @return the found type
+   */
+  private Optional<Type> getTypeForFullNameImpl(String fullyQualifiedName) {
     Type type = this.types.get(fullyQualifiedName);
     if (type == null) {
       String wrappedName = removeArraySyntax(fullyQualifiedName);
