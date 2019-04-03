@@ -88,7 +88,7 @@ public class JFieldParser {
   }
 
   public List<Element> parseJavadoc() {
-    return element().select("li > div, dl");
+    return element().select("li > div, li > dl");
   }
 
   private boolean isInInterface() {

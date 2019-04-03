@@ -202,6 +202,9 @@ public class JTypeParser {
 
   public List<Element> parseJavadocComment() {
     return document()
-        .select(".description > ul:nth-child(1) > li:nth-child(1) > .block, dl:nth-child(5)");
+        .select(
+            ".description > ul:nth-child(1) > li:nth-child(1) > .block,"
+                + ".description > ul:nth-child(1) > li:nth-child(1) > dl:last-child"
+        );
   }
 }
