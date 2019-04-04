@@ -123,7 +123,8 @@ public class JInvocableParser {
       Element linkElement = codeSummary.getElementsMatchingText("\\b" + Pattern.quote(type) + "\\b")
           .last();
 
-      if (linkElement != null && linkElement.tagName().equals("a")) {
+      if (linkElement != null && linkElement.tagName().equals("a")
+          && !linkElement.attr("title").contains("type parameter in ")) {
         type = linkToFqn(resolver().relativizeAbsoluteUrl(linkElement));
       }
       map.put(name, type);
