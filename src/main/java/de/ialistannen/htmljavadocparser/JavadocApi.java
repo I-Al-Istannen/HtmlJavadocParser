@@ -1,70 +1,142 @@
 package de.ialistannen.htmljavadocparser;
 
-import de.ialistannen.htmljavadocparser.model.types.JavadocClass;
+import de.ialistannen.htmljavadocparser.model.JavadocPackage;
+import de.ialistannen.htmljavadocparser.model.types.Type;
 import de.ialistannen.htmljavadocparser.resolving.DocumentResolver;
 import de.ialistannen.htmljavadocparser.resolving.HtmlSummaryParser;
 import de.ialistannen.htmljavadocparser.resolving.Index;
-import de.ialistannen.htmljavadocparser.resolving.ResourcesResolver;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * The base class for a Javadoc API.
  */
-public class JavadocApi {
+public class JavadocApi extends Index {
 
-  private final String baseUrl;
-  private final Index index;
+  private List<ApiEntry> apis;
 
   /**
-   * Creates a new javadoc API and starts indexing.
-   *
-   * @param baseUrl the base url of the API
-   * @param allClassesSuffix the suffix for the all classes url. "/allclasses-noframe.html" for
-   *     10, "/allclasses.html" for java 11
-   * @param documentResolver the document resolver to use
+   * Creates a new javadoc api.
    */
-  public JavadocApi(String baseUrl, String allClassesSuffix, DocumentResolver documentResolver) {
-    this.baseUrl = baseUrl;
-    this.index = new Index();
-
-    HtmlSummaryParser summaryParser = new HtmlSummaryParser(
-        documentResolver,
-        baseUrl,
-        baseUrl + allClassesSuffix,
-        index
-    );
-    index.addTypes(summaryParser.getTypes());
-    index.addPackages(summaryParser.getPackages());
+  public JavadocApi() {
+    this.apis = new ArrayList<>();
   }
 
   /**
-   * Returns the javadoc index.
+   * Adds an API.
    *
-   * @return the javadoc index
+   * @param baseUrl the base url of the api
+   * @param allClassesSuffix the suffix for the all classes url. "/allclasses-noframe.html" for
+   *     *     10, "/allclasses.html" for java 11
+   * @param resolver the document resolver to use
+   * @return this object
    */
-  public Index getIndex() {
-    return index;
+  public JavadocApi addApi(String baseUrl, String allClassesSuffix, DocumentResolver resolver) {
+    this.apis.add(new ApiEntry(baseUrl, resolver, allClassesSuffix));
+
+    return this;
+  }
+
+  /**
+   * Returns all indices.
+   *
+   * @return all indices
+   */
+  public List<Index> getIndices() {
+    return apis.stream()
+        .map(ApiEntry::getIndex)
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public Optional<Type> getTypeForFullName(String fullyQualifiedName) {
+    return getIndices().stream()
+        .flatMap(index -> index.getTypeForFullName(fullyQualifiedName).stream())
+        .findFirst();
+  }
+
+  @Override
+  public Type getTypeForFullNameOrError(String fullyQualifiedName) {
+    return getTypeForFullName(fullyQualifiedName)
+        .orElseThrow(() -> new NoSuchElementException("Type not found: " + fullyQualifiedName));
+  }
+
+  @Override
+  public List<Type> findMatching(Predicate<Type> filter) {
+    return getIndices().stream()
+        .flatMap(index -> index.findMatching(filter).stream())
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public List<Type> findWithSimpleName(String name) {
+    return getIndices().stream()
+        .flatMap(index -> index.findWithSimpleName(name).stream())
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public Optional<JavadocPackage> getPackage(String name) {
+    return getIndices().stream()
+        .flatMap(index -> index.getPackage(name).stream())
+        .findFirst();
+  }
+
+  @Override
+  public JavadocPackage getPackageOrError(String name) {
+    return getPackage(name)
+        .orElseThrow(() -> new NoSuchElementException("Packahe not found: " + name));
   }
 
   @Override
   public String toString() {
     return "JavadocApi{" +
-        "baseUrl='" + baseUrl + '\'' +
-        '}';
+        "apis=" + apis.stream().map(ApiEntry::getBaseUrl).collect(Collectors.joining(", "))
+        + '}';
   }
 
-  public static void main(String[] args) {
-    String baseUrl = "https://docs.oracle.com/javase/10/docs/api/";
-    DocumentResolver documentResolver = new ResourcesResolver(
-        baseUrl, "/testfiles"
-    );
+  /**
+   * A single API entry.
+   */
+  private class ApiEntry {
 
-    JavadocApi javadocApi = new JavadocApi(baseUrl, "/allclasses-noframe.html", documentResolver);
+    private final String baseUrl;
+    private Index index;
 
-    JavadocClass string = (JavadocClass) javadocApi.getIndex()
-        .getTypeForFullNameOrError("java.util.Map");
-    string.getMethods().stream()
-        .filter(m -> m.getSimpleName().equals("ofEntries"))
-        .findFirst()
-        .ifPresent(invocable -> System.out.println(invocable.getReturnType()));
+    ApiEntry(String baseUrl, DocumentResolver documentResolver, String allClassesSuffix) {
+      this.baseUrl = baseUrl;
+      this.index = new Index();
+
+      HtmlSummaryParser summaryParser = new HtmlSummaryParser(
+          documentResolver,
+          baseUrl,
+          baseUrl + allClassesSuffix,
+          JavadocApi.this
+      );
+      index.addTypes(summaryParser.getTypes());
+      index.addPackages(summaryParser.getPackages());
+    }
+
+    /**
+     * Returns the index.
+     *
+     * @return the index
+     */
+    Index getIndex() {
+      return index;
+    }
+
+    /**
+     * Returns the base url.
+     *
+     * @return the base url
+     */
+    String getBaseUrl() {
+      return baseUrl;
+    }
   }
 }
