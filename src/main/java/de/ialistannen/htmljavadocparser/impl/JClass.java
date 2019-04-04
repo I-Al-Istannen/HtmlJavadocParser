@@ -4,10 +4,12 @@ import de.ialistannen.htmljavadocparser.model.JavadocField;
 import de.ialistannen.htmljavadocparser.model.generic.GenericType;
 import de.ialistannen.htmljavadocparser.model.properties.Invocable;
 import de.ialistannen.htmljavadocparser.model.types.JavadocClass;
+import de.ialistannen.htmljavadocparser.model.types.Type;
 import de.ialistannen.htmljavadocparser.parsing.JClassParser;
 import de.ialistannen.htmljavadocparser.resolving.Index;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * An implementation of a javadoc class.
@@ -19,6 +21,11 @@ public class JClass extends JType implements JavadocClass {
   public JClass(String fullyQualifiedName, String simpleName, Index index, JClassParser parser) {
     super(fullyQualifiedName, simpleName, index, parser);
     this.parser = parser;
+  }
+
+  @Override
+  public Optional<Type> getSuperClass() {
+    return super.getSuperClass().or(() -> index.getTypeForFullName("java.lang.Object"));
   }
 
   @Override
