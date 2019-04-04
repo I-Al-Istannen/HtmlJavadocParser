@@ -98,7 +98,7 @@ public class JInvocableParser {
     while (!row.tagName().equals("tr")) {
       row = row.parent();
     }
-    return ParserHelper.parseReturnTypeFromMemberSummaryRow(row, parseActualOwner());
+    return ParserHelper.parseReturnTypeFromMemberSummaryRow(row, parseActualOwner(), resolver());
   }
 
   public Map<String, String> parseParameters() {
@@ -124,7 +124,7 @@ public class JInvocableParser {
           .last();
 
       if (linkElement != null && linkElement.tagName().equals("a")) {
-        type = linkToFqn(linkElement.attr("href"));
+        type = linkToFqn(resolver().relativizeAbsoluteUrl(linkElement));
       }
       map.put(name, type);
     }
@@ -154,7 +154,8 @@ public class JInvocableParser {
       for (Element link : links) {
         String href = link.attr("href");
         if (href.contains("#" + parseSimpleName())) {
-          return linkToFqn(href.substring(0, href.lastIndexOf('#')));
+          String fqn = linkToFqn(resolver().relativizeAbsoluteUrl(link));
+          return fqn.substring(0, fqn.lastIndexOf('#'));
         }
       }
     }
@@ -175,14 +176,14 @@ public class JInvocableParser {
   public List<String> parseAnnotations() {
     return element().getElementsByTag("a").stream()
         .filter(element -> element.attr("title").contains("annotation in"))
-        .map(element -> linkToFqn(element.attr("href")))
+        .map(link -> linkToFqn(resolver().relativizeAbsoluteUrl(link)))
         .collect(Collectors.toList());
   }
 
   public Collection<String> parseThrows() {
     return element().getElementsByTag("a").stream()
         .filter(this::hasPreviousThrowsTag)
-        .map(element -> linkToFqn(element.attr("href")))
+        .map(link -> linkToFqn(resolver().relativizeAbsoluteUrl(link)))
         .collect(Collectors.toSet());
   }
 
@@ -227,7 +228,8 @@ public class JInvocableParser {
         element(),
         generics,
         parseSimpleName(),
-        parsePackage() + "." + parseSimpleName()
+        parsePackage() + "." + parseSimpleName(),
+        resolver()
     );
   }
 

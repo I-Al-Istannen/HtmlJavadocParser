@@ -31,7 +31,7 @@ public class JInterfaceParser extends JClassParser {
     dd = dd.nextElementSibling();
 
     return dd.children().stream()
-        .map(code -> linkToFqn(code.child(0).attr("href")))
+        .map(code -> linkToFqn(resolver().relativizeAbsoluteUrl(code.child(0))))
         .collect(Collectors.toList());
   }
 }

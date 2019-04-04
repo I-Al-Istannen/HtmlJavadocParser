@@ -84,7 +84,7 @@ public class JFieldParser {
       row = row.parent();
     }
 
-    return ParserHelper.parseReturnTypeFromMemberSummaryRow(row, parseOwner());
+    return ParserHelper.parseReturnTypeFromMemberSummaryRow(row, parseOwner(), resolver);
   }
 
   public List<Element> parseJavadoc() {

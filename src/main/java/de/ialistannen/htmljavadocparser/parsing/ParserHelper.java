@@ -8,6 +8,7 @@ import de.ialistannen.htmljavadocparser.model.generic.GenericType.Bound.BindingT
 import de.ialistannen.htmljavadocparser.model.generic.GenericTypeProxy;
 import de.ialistannen.htmljavadocparser.model.properties.HasVisibility.VisibilityLevel;
 import de.ialistannen.htmljavadocparser.model.types.Type;
+import de.ialistannen.htmljavadocparser.resolving.DocumentResolver;
 import de.ialistannen.htmljavadocparser.resolving.Index;
 import de.ialistannen.htmljavadocparser.util.LinkUtils;
 import de.ialistannen.htmljavadocparser.util.StringUtils;
@@ -71,9 +72,11 @@ final class ParserHelper {
    *
    * @param row the row
    * @param owner the owning class (used if it is a constructor)
+   * @param resolver the document resolver to use to relativize urls
    * @return the return type
    */
-  static String parseReturnTypeFromMemberSummaryRow(Element row, String owner) {
+  static String parseReturnTypeFromMemberSummaryRow(Element row, String owner,
+      DocumentResolver resolver) {
     // constructor
     if (!row.getElementsByClass("colConstructorName").isEmpty()) {
       return owner;
@@ -90,7 +93,8 @@ final class ParserHelper {
           .trim();
     }
 
-    return linkToFqn(returnTypeLink.attr("href")).replaceAll("#.+", "");
+    return linkToFqn(resolver.relativizeAbsoluteUrl(returnTypeLink))
+        .replaceAll("#.+", "");
   }
 
   /**
@@ -101,10 +105,11 @@ final class ParserHelper {
    * @param input the input string
    * @param simpleName the simple name of the object the type is in
    * @param fqn the fully qualified name of the object the type is in
+   * @param resolver the document resolver to use to relativize urls
    * @return the parsed generic types
    */
   static List<GenericType> parseGenericTypes(Index index, Element root, String input,
-      String simpleName, String fqn) {
+      String simpleName, String fqn, DocumentResolver resolver) {
     String typeName = StringUtils.normalizeWhitespace(input);
 
     if (!typeName.contains("<")) {
@@ -119,24 +124,26 @@ final class ParserHelper {
     String[] parts = typeName.split(",");
 
     return Arrays.stream(parts)
-        .map(genericTypes -> parseGenericType(index, root, genericTypes.trim(), simpleName, fqn))
+        .map(genericTypes -> parseGenericType(
+            index, root, genericTypes.trim(), simpleName, fqn, resolver
+        ))
         .collect(Collectors.toList());
   }
 
   private static GenericType parseGenericType(Index index, Element root, String string,
-      String simpleName, String fqn) {
+      String simpleName, String fqn, DocumentResolver resolver) {
     // Just the type
     if (!string.contains("<") && !string.contains(" ")) {
-      Type type = findTypeForName(index, root, string, simpleName, fqn);
+      Type type = findTypeForName(index, root, string, simpleName, fqn, resolver);
       return new GenericType(type, List.of());
     }
 
     // It is sth like "Enum<E>"
     if (!string.contains(" ")) {
       String name = string.substring(0, string.indexOf('<'));
-      Type type = findTypeForName(index, root, name, simpleName, fqn);
+      Type type = findTypeForName(index, root, name, simpleName, fqn, resolver);
       String rest = string.substring(string.indexOf('<') + 1, string.lastIndexOf('>'));
-      GenericType restType = parseGenericType(index, root, rest, simpleName, fqn);
+      GenericType restType = parseGenericType(index, root, rest, simpleName, fqn, resolver);
 
       Bound bound = new Bound(restType, BindingType.EXACT);
 
@@ -146,21 +153,23 @@ final class ParserHelper {
     // Has a bound like X extends|super Y
     String[] parts = string.split("\\s");
     String name = parts[0];
-    Type rawType = findTypeForName(index, root, name, simpleName, fqn);
+    Type rawType = findTypeForName(index, root, name, simpleName, fqn, resolver);
 
     BindingType type = BindingType.forName(parts[1]);
     String rest = parts[2];
 
-    GenericType genericType = parseGenericType(index, root, rest, simpleName, fqn);
+    GenericType genericType = parseGenericType(index, root, rest, simpleName, fqn, resolver);
     Bound bound = new Bound(genericType, type);
     return new GenericType(rawType, List.of(bound));
   }
 
   private static Type findTypeForName(Index index, Element root, String name, String simpleName,
-      String fqn) {
+      String fqn, DocumentResolver resolver) {
     for (Element link : root.getElementsByTag("a")) {
       if (link.ownText().matches(name + "\\b")) {
-        return index.getTypeForFullNameOrError(LinkUtils.linkToFqn(link.attr("href")));
+        return index.getTypeForFullNameOrError(
+            LinkUtils.linkToFqn(resolver.relativizeAbsoluteUrl(link))
+        );
       }
     }
     if (name.equals(simpleName)) {

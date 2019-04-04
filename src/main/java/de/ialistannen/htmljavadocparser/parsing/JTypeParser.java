@@ -114,7 +114,7 @@ public class JTypeParser {
     dd = dd.nextElementSibling();
 
     return dd.children().stream()
-        .map(code -> linkToFqn(code.child(0).attr("href")))
+        .map(code -> linkToFqn(resolver().relativizeAbsoluteUrl(code.child(0))))
         .collect(Collectors.toList());
   }
 
@@ -131,7 +131,7 @@ public class JTypeParser {
   public List<String> parseAnnotations() {
     return getTypeDeclarationPre().getElementsByTag("a").stream()
         .filter(element -> element.attr("title").contains("annotation in"))
-        .map(element -> linkToFqn(element.attr("href")))
+        .map(element -> linkToFqn(resolver().relativizeAbsoluteUrl(element)))
         .collect(Collectors.toList());
   }
 

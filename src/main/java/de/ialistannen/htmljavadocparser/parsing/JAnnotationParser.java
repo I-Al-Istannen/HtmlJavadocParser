@@ -48,7 +48,7 @@ public class JAnnotationParser extends JTypeParser {
 
       JAnnotationMethodParser parser = new JAnnotationMethodParser(link.absUrl("href"), resolver());
       JAnnotationMethod method = new JAnnotationMethod(
-          LinkUtils.linkToFqn(link.attr("href")),
+          LinkUtils.linkToFqn(resolver().relativizeAbsoluteUrl(link)),
           index,
           parser
       );

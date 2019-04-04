@@ -59,7 +59,7 @@ public class JClassParser extends JTypeParser {
   }
 
   private JavadocField fieldFromLink(Element link, Index index) {
-    String fullyQualifiedName = LinkUtils.linkToFqn(link.attr("href"));
+    String fullyQualifiedName = LinkUtils.linkToFqn(resolver().relativizeAbsoluteUrl(link));
     return new JField(
         fullyQualifiedName,
         new JFieldParser(resolver(), link.absUrl("href")),
@@ -76,7 +76,8 @@ public class JClassParser extends JTypeParser {
         typeNameLabel,
         typeName,
         parseSimpleName(),
-        parsePackage() + "." + parseSimpleName()
+        parsePackage() + "." + parseSimpleName(),
+        resolver()
     );
   }
 

@@ -43,7 +43,7 @@ public class JPackageParser {
             .getElementsByAttributeValueEnding("title", "in " + parseQualifiedName())
         )
         .flatMap(Collection::stream)
-        .map(element -> LinkUtils.linkToFqn(element.attr("href")))
+        .map(element -> LinkUtils.linkToFqn(resolver.relativizeAbsoluteUrl(element)))
         .collect(Collectors.toSet());
   }
 

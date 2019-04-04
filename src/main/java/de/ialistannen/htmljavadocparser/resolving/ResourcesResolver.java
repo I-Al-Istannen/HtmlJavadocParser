@@ -43,13 +43,21 @@ public class ResourcesResolver implements DocumentResolver {
     Path base = Path.of(baseUrl);
     Path given = Path.of(input);
 
-    Path relative = base.relativize(given);
-    return relative.getParent() == null ? "" : "/" + relative.getParent().toString();
+    return base.relativize(given).toString();
   }
 
   private String resolvePath(String input) {
     return basePath + "/" + input
         .replace(baseUrl, "")
         .replaceAll("#.+", ""); // remove fragment
+  }
+
+  @Override
+  public String relativizeAbsoluteUrl(String absUrl) {
+    String relative = getRelative(absUrl);
+    if (relative.startsWith("/")) {
+      return relative.substring(1) + ".html";
+    }
+    return relative;
   }
 }

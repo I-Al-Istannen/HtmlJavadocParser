@@ -7,16 +7,21 @@ public final class LinkUtils {
   }
 
   /**
-   * Converts a relative link (like {@code ../../java/lang/String.html}) to a fully qualified name.
+   * Converts a relative link (like {@code java/lang/String.html}) to a fully qualified name.
    *
    * @param link the link
    * @return the fully qualified name
    */
   public static String linkToFqn(String link) {
-    return link.replaceAll("(\\.\\./)+", "")
+    return link
+//        // replace relative leadings: "../../whatever"
+//        .replaceAll("(\\.\\./)+", "")
+        // strip out module name (as they start with "java.base/package/path/"
+        .replaceAll("^.+\\..+?/", "")
         .replace(".html", "")
         .replace("/", ".")
-        .replace("<init>", ""); // constructors
+        // Clear constructors
+        .replace("<init>", "");
   }
 
   /**

@@ -134,7 +134,12 @@ public class JType implements Type {
     );
     Index index = new Index();
 
-    HtmlSummaryParser summaryParser = new HtmlSummaryParser(documentResolver, baseUrl, index);
+    HtmlSummaryParser summaryParser = new HtmlSummaryParser(
+        documentResolver,
+        baseUrl,
+        baseUrl + "/allclasses-noframe.html",
+        index
+    );
     index.addTypes(summaryParser.getTypes());
     index.addPackages(summaryParser.getPackages());
 

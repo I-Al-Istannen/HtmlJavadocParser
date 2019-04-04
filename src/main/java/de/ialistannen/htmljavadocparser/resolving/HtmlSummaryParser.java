@@ -28,6 +28,7 @@ public class HtmlSummaryParser {
 
   private final DocumentResolver documentResolver;
   private final String baseUrl;
+  private final String allClassesUrl;
   private final Index index;
   private Collection<Type> typeCache;
   private Map<String, JavadocPackage> packageCache;
@@ -37,16 +38,19 @@ public class HtmlSummaryParser {
    *
    * @param documentResolver the document resolver to use
    * @param baseUrl the base url
+   * @param allClassesUrl the url to find the class list at
    * @param index the index
    */
-  public HtmlSummaryParser(DocumentResolver documentResolver, String baseUrl, Index index) {
+  public HtmlSummaryParser(DocumentResolver documentResolver, String baseUrl, String allClassesUrl,
+      Index index) {
     this.documentResolver = documentResolver;
     this.baseUrl = baseUrl;
+    this.allClassesUrl = allClassesUrl;
     this.index = index;
   }
 
   private void index() {
-    Document document = documentResolver.resolve(baseUrl + "/allclasses-noframe.html");
+    Document document = documentResolver.resolve(allClassesUrl);
     Element main = document.getElementsByAttributeValue("role", "main").first();
 
     typeCache = new ArrayList<>();
@@ -100,7 +104,7 @@ public class HtmlSummaryParser {
   }
 
   private String extractFqn(Element link) {
-    return LinkUtils.linkToFqn(link.attr("href"));
+    return LinkUtils.linkToFqn(documentResolver.relativizeAbsoluteUrl(link));
   }
 
   private String extractPackageName(Element link) {

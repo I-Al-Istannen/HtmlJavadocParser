@@ -1,6 +1,7 @@
 package de.ialistannen.htmljavadocparser.resolving;
 
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 /**
  * A document resolver that caches documents to speed up operations.
@@ -22,6 +23,16 @@ public class CachingDocumentResolver implements DocumentResolver {
   public CachingDocumentResolver(DocumentResolver wrapped, SimpleCache<String, Document> cache) {
     this.wrapped = wrapped;
     this.cache = cache;
+  }
+
+  @Override
+  public String relativizeAbsoluteUrl(String absUrl) {
+    return wrapped.relativizeAbsoluteUrl(absUrl);
+  }
+
+  @Override
+  public String relativizeAbsoluteUrl(Element link) {
+    return wrapped.relativizeAbsoluteUrl(link);
   }
 
   @Override

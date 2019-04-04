@@ -27,7 +27,7 @@ public class JEnumParser extends JClassParser {
 
       // enum constants are basically fields
       JFieldParser fieldParser = new JFieldParser(resolver(), link.absUrl("href"));
-      String fqn = LinkUtils.linkToFqn(link.attr("href"));
+      String fqn = LinkUtils.linkToFqn(resolver().relativizeAbsoluteUrl(link));
       JField field = new JField(fqn, fieldParser, index);
 
       fields.add(field);
