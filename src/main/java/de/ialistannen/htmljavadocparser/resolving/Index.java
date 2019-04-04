@@ -90,7 +90,7 @@ public class Index {
   }
 
   private Optional<Type> tryGetGenericProxy(String name) {
-    if (name.contains(".")) {
+    if (name.contains(".") || name.contains("[]")) {
       return Optional.empty();
     }
     return Optional.of(new GenericTypeProxy(name, name));
