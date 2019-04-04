@@ -1,5 +1,6 @@
 package de.ialistannen.htmljavadocparser.resolving;
 
+import de.ialistannen.htmljavadocparser.util.LinkUtils;
 import java.io.IOException;
 import java.lang.module.ResolutionException;
 import java.nio.file.Path;
@@ -34,7 +35,8 @@ public class UrlDocumentResolver implements DocumentResolver {
 
   @Override
   public String relativizeAbsoluteUrl(String absUrl) {
-    return Path.of(baseUrl).relativize(Path.of(absUrl)).toString();
+    String cleanedUrl = LinkUtils.clearQueryFragment(absUrl);
+    return Path.of(baseUrl).relativize(Path.of(cleanedUrl)).toString();
   }
 }
 

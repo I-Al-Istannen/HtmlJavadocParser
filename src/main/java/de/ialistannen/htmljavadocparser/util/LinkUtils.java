@@ -13,15 +13,25 @@ public final class LinkUtils {
    * @return the fully qualified name
    */
   public static String linkToFqn(String link) {
-    return link
-//        // replace relative leadings: "../../whatever"
-//        .replaceAll("(\\.\\./)+", "")
+    return clearQueryFragment(link)
         // strip out module name (as they start with "java.base/package/path/"
         .replaceAll("^.+\\..+?/", "")
         .replace(".html", "")
         .replace("/", ".")
         // Clear constructors
         .replace("<init>", "");
+  }
+
+  /**
+   * Clears the query fragment (i.e. the things following a ?).
+   *
+   * @param link the link
+   * @return the url without the query
+   */
+  public static String clearQueryFragment(String link) {
+    return link
+        // clear query fragment. the or is to make sure stuff like "...?query#nameOfMethod()" works
+        .replaceAll("\\?.+?(#|$)", "$1");
   }
 
   /**
