@@ -80,7 +80,8 @@ public class Index {
       Type wrapped = this.types.get(wrappedName);
 
       if (wrapped == null) {
-        return tryGetGenericProxy(fullyQualifiedName);
+        return tryGetGenericProxy(fullyQualifiedName)
+            .or(() -> tryGetGenericProxy(wrappedName).map(ArrayType::new));
       }
 
       return Optional.of(new ArrayType(wrapped));
