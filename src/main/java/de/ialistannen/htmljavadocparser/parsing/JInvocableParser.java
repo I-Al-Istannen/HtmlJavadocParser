@@ -116,21 +116,35 @@ public class JInvocableParser {
 
     String parameters = fullLink.replaceAll(".+\\((.+)\\).*", "$1");
     for (String parameter : parameters.split(", ")) {
-      String[] parts = parameter.split(" ");
-      String type = parts[0].replaceAll("<.+", ""); // remove generics
-      String name = parts[1].replaceAll("<.+", ""); // remove generics
+      String[] parts = ParserHelper.removeGenericTypes(parameter).split(" ");
+      String type = parts[0];
+      String name = parts[1];
 
-      Element linkElement = codeSummary.getElementsMatchingText("\\b" + Pattern.quote(type) + "\\b")
+      Element linkElement = codeSummary
+          .getElementsMatchingText("\\b" + Pattern.quote(type) + "\\b")
           .last();
+
+      if (linkElement == null) {
+        linkElement = codeSummary
+            .getElementsMatchingText("\\b" + Pattern.quote(removeArraySyntax(type)) + "\\b")
+            .last();
+      }
 
       if (linkElement != null && linkElement.tagName().equals("a")
           && !linkElement.attr("title").contains("type parameter in ")) {
         type = linkToFqn(resolver().relativizeAbsoluteUrl(linkElement));
+        if (parameter.contains("...") || parameter.contains("[]")) {
+          type += "[]";
+        }
       }
       map.put(name, type);
     }
 
     return map;
+  }
+
+  private String removeArraySyntax(String input) {
+    return input.replace("[]", "").replace("...", "");
   }
 
   public DeprecationStatus parseDeprecationStatus() {
@@ -209,7 +223,7 @@ public class JInvocableParser {
 
     int returnTypeStartIndex = -1;
     for (String part : declaration.split("[ (]")) {
-      String cleanedPart = part.replaceAll("<.+>", "");
+      String cleanedPart = ParserHelper.removeGenericTypes(part);
       if (!cleanedPart.trim().isEmpty() && returnType.endsWith(cleanedPart)) {
         returnTypeStartIndex = declaration.indexOf(part);
         break;

@@ -87,14 +87,23 @@ final class ParserHelper {
 
     // no link, so it was a primitive or generic type
     if (returnTypeLink == null) {
-      return returnTypeTd.text()
-          .replace("static", "")
-          .replaceAll("^<.+?>\\s", "")  // remove generic type declaration
+      return removeGenericTypes(returnTypeTd.text()
+          .replace("static", ""))
           .trim();
     }
 
     return linkToFqn(resolver.relativizeAbsoluteUrl(returnTypeLink))
         .replaceAll("#.+", "");
+  }
+
+  /**
+   * Removes generic type declarations, i.e. strips out all {@code <.+>}.
+   *
+   * @param input the input
+   * @return the string without generic type declarations
+   */
+  static String removeGenericTypes(String input) {
+    return input.replaceAll("<.+?>(\\s|\\b|\\B|$)", "");
   }
 
   /**
