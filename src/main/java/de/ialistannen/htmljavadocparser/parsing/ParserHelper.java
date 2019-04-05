@@ -103,7 +103,7 @@ final class ParserHelper {
    * @return the string without generic type declarations
    */
   static String removeGenericTypes(String input) {
-    return input.replaceAll("<.+?>(\\s|\\b|\\B|$)", "");
+    return input.replaceAll("<.+?>(\\s|\\b|\\B|$)", "$1");
   }
 
   /**
