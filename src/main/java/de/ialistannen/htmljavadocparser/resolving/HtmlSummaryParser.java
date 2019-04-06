@@ -44,7 +44,7 @@ public class HtmlSummaryParser {
   public HtmlSummaryParser(DocumentResolver documentResolver, String baseUrl, String allClassesUrl,
       Index index) {
     this.documentResolver = documentResolver;
-    this.baseUrl = baseUrl;
+    this.baseUrl = baseUrl.endsWith("/") ? baseUrl.substring(0, baseUrl.length() - 1) : baseUrl;
     this.allClassesUrl = allClassesUrl;
     this.index = index;
   }
@@ -96,7 +96,7 @@ public class HtmlSummaryParser {
 
       String packageName = extractPackageName(a);
       if (!packageCache.containsKey(packageName)) {
-        String packageUrl = baseUrl + "/" + packageName.replace(".", "/") + "/package-summary.html";
+        String packageUrl = extractPackageUrl(a);
         JPackageParser parser = new JPackageParser(documentResolver, packageUrl);
         packageCache.put(packageName, new JPackage(parser, packageName, index));
       }
@@ -109,6 +109,14 @@ public class HtmlSummaryParser {
 
   private String extractPackageName(Element link) {
     return link.attr("title").replaceAll(".+? in (.+)", "$1");
+  }
+
+  private String extractPackageUrl(Element link) {
+    String packageNameUrlFormat = extractPackageName(link).replace('.', '/');
+    String href = link.attr("href");
+    int startIndex = href.indexOf(packageNameUrlFormat);
+    String fullNameUrlFormat = href.substring(0, startIndex + packageNameUrlFormat.length());
+    return baseUrl + "/" + fullNameUrlFormat + "/package-summary.html";
   }
 
   private String extractSimpleName(Element link) {
