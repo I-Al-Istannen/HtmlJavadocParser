@@ -1,10 +1,18 @@
 package de.ialistannen.htmljavadocparser.resolving;
 
+import de.ialistannen.htmljavadocparser.exception.ResolveException;
 import de.ialistannen.htmljavadocparser.util.LinkUtils;
 import java.io.IOException;
-import java.lang.module.ResolutionException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpClient.Redirect;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.file.Path;
+import java.time.Duration;
 import org.jsoup.Jsoup;
+import org.jsoup.helper.HttpConnection;
 import org.jsoup.nodes.Document;
 
 /**
@@ -13,6 +21,7 @@ import org.jsoup.nodes.Document;
 public class UrlDocumentResolver implements DocumentResolver {
 
   private final String baseUrl;
+  private final HttpClient httpClient;
 
   /**
    * The base url.
@@ -21,15 +30,26 @@ public class UrlDocumentResolver implements DocumentResolver {
    */
   public UrlDocumentResolver(String baseUrl) {
     this.baseUrl = baseUrl;
+    this.httpClient = HttpClient.newBuilder()
+        .connectTimeout(Duration.ofSeconds(10))
+        .followRedirects(Redirect.NORMAL)
+        .build();
   }
 
   @Override
   public Document resolve(String url) {
     try {
-      return Jsoup.connect(url).get();
-    } catch (IOException e) {
+
+      HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+          .header("User-Agent", HttpConnection.DEFAULT_UA)
+          .build();
+      HttpResponse<String> response = httpClient
+          .send(request, BodyHandlers.ofString());
+
+      return Jsoup.parse(response.body(), url);
+    } catch (IOException | InterruptedException e) {
       e.printStackTrace();
-      throw new ResolutionException(e);
+      throw new ResolveException("Error fetching url '" + url + "'", e);
     }
   }
 
