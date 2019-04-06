@@ -91,7 +91,8 @@ public class HtmlSummaryParser {
         );
         typeCache.add(jjEnum);
       } else {
-        throw new IllegalArgumentException("Encountered an unknown type: " + a.attr("title"));
+        // Ignore unknown types
+        continue;
       }
 
       String packageName = extractPackageName(a);
