@@ -35,7 +35,13 @@ public class JClassParser extends JTypeParser {
   }
 
   public List<Invocable> parseConstructors(Index index) {
-    Elements links = document().getElementById("constructor.summary").parent()
+    Element constructorSummary = document().getElementById("constructor.summary");
+
+    if (constructorSummary == null) {
+      return Collections.emptyList();
+    }
+
+    Elements links = constructorSummary.parent()
         .getElementsByClass("memberNameLink");
 
     return links.stream()
