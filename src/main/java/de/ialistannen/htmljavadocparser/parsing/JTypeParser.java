@@ -6,7 +6,6 @@ import de.ialistannen.htmljavadocparser.impl.JInvocable;
 import de.ialistannen.htmljavadocparser.model.properties.Deprecatable.DeprecationStatus;
 import de.ialistannen.htmljavadocparser.model.properties.HasVisibility.VisibilityLevel;
 import de.ialistannen.htmljavadocparser.model.properties.Invocable;
-import de.ialistannen.htmljavadocparser.model.types.Type;
 import de.ialistannen.htmljavadocparser.resolving.DocumentResolver;
 import de.ialistannen.htmljavadocparser.resolving.Index;
 import de.ialistannen.htmljavadocparser.util.StringUtils;
@@ -171,20 +170,6 @@ public class JTypeParser {
   protected Invocable invocableFromLink(Element link, Index index) {
     String decodedLink = URLDecoder.decode(link.absUrl("href"), StandardCharsets.UTF_8);
     String fullyQualifiedName = linkToFqn(resolver.relativizeAbsoluteUrl(decodedLink));
-    String owningTypeName = fullyQualifiedName.substring(0, fullyQualifiedName.indexOf("#"));
-    String myFullName = linkToFqn(resolver.relativizeAbsoluteUrl(url));
-
-    // defer the fetching to the other type if possible
-    if (!myFullName.equals(owningTypeName)) {
-      Optional<Type> owningType = index.getTypeForFullName(owningTypeName);
-      if (owningType.isPresent()) {
-        for (Invocable method : owningType.get().getMethods()) {
-          if (method.getFullyQualifiedName().equals(fullyQualifiedName)) {
-            return method;
-          }
-        }
-      }
-    }
 
     JInvocableParser parser = new JInvocableParser(link.absUrl("href"), resolver());
     return new JInvocable(fullyQualifiedName, index, parser);
