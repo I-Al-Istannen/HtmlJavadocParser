@@ -7,6 +7,7 @@ import de.ialistannen.htmljavadocparser.model.types.JavadocAnnotation;
 import de.ialistannen.htmljavadocparser.model.types.JavadocInterface;
 import de.ialistannen.htmljavadocparser.model.types.Type;
 import de.ialistannen.htmljavadocparser.parsing.JAnnotationParser;
+import de.ialistannen.htmljavadocparser.parsing.doc.JavadocCommentParser;
 import de.ialistannen.htmljavadocparser.resolving.Index;
 import java.util.Collections;
 import java.util.List;
@@ -84,7 +85,7 @@ public class JAnnotation implements JavadocAnnotation {
 
   @Override
   public Optional<JavadocComment> getJavadoc() {
-    return Optional.empty();
+    return new JavadocCommentParser().parse(parser.parseJavadocComment());
   }
 
   @Override
