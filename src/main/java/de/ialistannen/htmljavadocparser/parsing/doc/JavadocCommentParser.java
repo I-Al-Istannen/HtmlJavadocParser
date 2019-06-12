@@ -50,8 +50,16 @@ public class JavadocCommentParser {
   }
 
   private BlockTag parseBlockTag(Element dt) {
-    Element name = dt.child(0);
     Element dd = dt.nextElementSibling();
+    Element name;
+
+    if (dt.children().isEmpty()) {
+      Element newNameTag = dt.appendElement("span");
+      newNameTag.text(dt.text());
+      name = newNameTag;
+    } else {
+      name = dt.child(0);
+    }
 
     return new BlockTag(new HtmlTag(name), new HtmlTag(dd));
   }
