@@ -34,8 +34,17 @@ public class JAnnotationParser extends JTypeParser {
     // methods in annotations are identified by different keys and have a slightly different
     // structure
 
-    Element anchor = document().getElementById("annotation.type.required.element.summary");
+    Element anchorRequired = document().getElementById("annotation.type.required.element.summary");
+    Element anchorOptional = document().getElementById("annotation.type.optional.element.summary");
 
+    List<Invocable> invocables = new ArrayList<>();
+    invocables.addAll(parseFromAnchor(index, anchorRequired));
+    invocables.addAll(parseFromAnchor(index, anchorOptional));
+
+    return invocables;
+  }
+
+  private List<Invocable> parseFromAnchor(Index index, Element anchor) {
     if (anchor == null) {
       return Collections.emptyList();
     }
