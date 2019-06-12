@@ -7,6 +7,7 @@ import de.ialistannen.htmljavadocparser.model.properties.Invocable;
 import de.ialistannen.htmljavadocparser.model.types.JavadocAnnotation;
 import de.ialistannen.htmljavadocparser.model.types.Type;
 import de.ialistannen.htmljavadocparser.parsing.JAnnotationMethodParser;
+import de.ialistannen.htmljavadocparser.parsing.doc.JavadocCommentParser;
 import de.ialistannen.htmljavadocparser.resolving.Index;
 import java.util.Collection;
 import java.util.Collections;
@@ -80,7 +81,7 @@ public class JAnnotationMethod implements Invocable {
 
   @Override
   public Optional<JavadocComment> getJavadoc() {
-    return Optional.empty();
+    return new JavadocCommentParser().parse(parser.parseJavadoc());
   }
 
   @Override
